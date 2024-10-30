@@ -1,0 +1,4 @@
+{
+    "dotnet.defaultSolution": "orbital.sln",
+    "liveServer.settings.multiRootWorkspaceName": "orbital"
+}
