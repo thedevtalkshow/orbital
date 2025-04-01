@@ -4,19 +4,40 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "orbital.web", "orbital.web\orbital.web.csproj", "{74873CF0-1436-43E8-BB9D-8F1ECD90871D}"
+	ProjectSection(ProjectDependencies) = postProject
+		{6519F008-A667-CB21-7987-30923FC1325D} = {6519F008-A667-CB21-7987-30923FC1325D}
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "orbital.AppHost", "orbital.AppHost\orbital.AppHost.csproj", "{CE847CE3-E225-49D0-9546-DB2C4778062A}"
+	ProjectSection(ProjectDependencies) = postProject
+		{74873CF0-1436-43E8-BB9D-8F1ECD90871D} = {74873CF0-1436-43E8-BB9D-8F1ECD90871D}
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "orbital.ServiceDefaults", "orbital.ServiceDefaults\orbital.ServiceDefaults.csproj", "{6519F008-A667-CB21-7987-30923FC1325D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
-	GlobalSection(SolutionProperties) = preSolution
-		HideSolutionNode = FALSE
-	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{74873CF0-1436-43E8-BB9D-8F1ECD90871D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{74873CF0-1436-43E8-BB9D-8F1ECD90871D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{74873CF0-1436-43E8-BB9D-8F1ECD90871D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{74873CF0-1436-43E8-BB9D-8F1ECD90871D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CE847CE3-E225-49D0-9546-DB2C4778062A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CE847CE3-E225-49D0-9546-DB2C4778062A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CE847CE3-E225-49D0-9546-DB2C4778062A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CE847CE3-E225-49D0-9546-DB2C4778062A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6519F008-A667-CB21-7987-30923FC1325D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6519F008-A667-CB21-7987-30923FC1325D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6519F008-A667-CB21-7987-30923FC1325D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6519F008-A667-CB21-7987-30923FC1325D}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {3DB27583-CE94-43F0-B84A-62B36DFE2291}
 	EndGlobalSection
 EndGlobal
