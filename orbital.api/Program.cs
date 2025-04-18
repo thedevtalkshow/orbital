@@ -1,4 +1,14 @@
+using Azure.Identity;
+using Microsoft.Azure.Cosmos;
+using orbital.core;
+
 var builder = WebApplication.CreateBuilder(args);
+
+#region Config
+
+string cosmosAccountEndpoint = "https://cosmosdb-wad2cfjazfcve.documents.azure.com:443/";
+
+#endregion
 
 builder.AddServiceDefaults();
 
@@ -22,17 +32,48 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+DefaultAzureCredential defaultAzureCredential = new DefaultAzureCredential();
+
+var cosmosClient = new CosmosClient(cosmosAccountEndpoint, defaultAzureCredential);
+//var cosmosClient = new CosmosClient("AccountEndpoint=https://localhost:8081/;AccountKey=C2y6yDjf5/R+ob0N8A7Cgv30VRDJIWEHLM+4QDU5DE2nQ9nDuVTqobD4b8mGGyPMbIZnqyMsEcaGQy67XIw/Jw==");
+
+Database database = cosmosClient.GetDatabase("orbital");
+Container container = database.GetContainer("meetings");
+
 app.MapGet("/api/meetings", () =>
 {
-    return Results.Ok(new
-    {
-        Id = 1,
-        Name = "Meeting 1",
-        Description = "This is a meeting",
-        StartTime = DateTime.UtcNow,
-        EndTime = DateTime.UtcNow.AddHours(1)
-    });
+    return Results.Ok(container.GetItemLinqQueryable<Meeting>().ToList());
 });
+
+app.MapGet("api/meetings/{id}", async (string id) =>
+{
+    try
+    {
+        var response = await container.ReadItemAsync<Meeting>(id, new PartitionKey("meeting"));
+        return Results.Ok(response.Resource);
+    }
+    catch (CosmosException ex)
+    {
+        return Results.NotFound(ex.Message);
+    }
+
+});
+
+app.MapPost("/api/meetings", async (Meeting meeting) =>
+{
+    try
+    {
+        var response = await container.CreateItemAsync(meeting, new PartitionKey(meeting.type));
+        return Results.Created($"/api/meetings/{meeting.id}", meeting);
+    }
+    catch (Exception ex)
+    {
+        return Results.BadRequest(ex.Message);
+    }
+});
+
+
+
 
 var summaries = new[]
 {
