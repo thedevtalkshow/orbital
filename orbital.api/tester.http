@@ -1,0 +1,15 @@
+POST https://localhost:7024/api/meetings
+Content-Type: application/json
+{
+  "id": "1",
+  "type": "meeting",
+  "Title": "Test Meeting",
+  "Description": "This is a test meeting",
+  "StartTime": "2023-10-01T10:00:00Z",
+  "EndTime": "2023-10-01T11:00:00Z"
+}
+
+###
+
+GET https://localhost:7024/api/meetings/1
+Content-Type: application/json

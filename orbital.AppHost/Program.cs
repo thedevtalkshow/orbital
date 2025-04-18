@@ -9,13 +9,13 @@ var cosmosdb = builder.AddAzureCosmosDB("cosmosdb").RunAsPreviewEmulator(
     emulator =>
     {
         emulator.WithDataExplorer(8888);
-        emulator.WithDataVolume("appData2");
+        emulator.WithDataVolume();
         //emulator.WithHttpEndpoint(8889);
         emulator.WithLifetime(ContainerLifetime.Persistent);
     });
 
 var database = cosmosdb.AddCosmosDatabase("orbital", "orbital");
-var container = database.AddContainer("container", "/type", "userGroupData");
+var container = database.AddContainer("meetings", "/type", "meetings");
 
 builder.AddProject<Projects.orbital_api>("orbital-api")
         .WithReference(cosmosdb);
