@@ -1,7 +1,7 @@
 POST https://localhost:7024/api/meetings
 Content-Type: application/json
 {
-  "id": "1",
+  "id": "5",
   "type": "meeting",
   "Title": "Test Meeting",
   "Description": "This is a test meeting",
@@ -11,5 +11,10 @@ Content-Type: application/json
 
 ###
 
-GET https://localhost:7024/api/meetings/1
+GET https://localhost:7024/api/meetings/4
+Content-Type: application/json
+
+###
+
+GET https://localhost:7024/api/meetings
 Content-Type: application/json

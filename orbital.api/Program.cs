@@ -4,12 +4,6 @@ using orbital.core;
 
 var builder = WebApplication.CreateBuilder(args);
 
-#region Config
-
-string cosmosAccountEndpoint = "https://cosmosdb-wad2cfjazfcve.documents.azure.com:443/";
-
-#endregion
-
 builder.AddServiceDefaults();
 
 // Add services to the container.
@@ -32,23 +26,28 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-DefaultAzureCredential defaultAzureCredential = new DefaultAzureCredential();
-
-var cosmosClient = new CosmosClient(cosmosAccountEndpoint, defaultAzureCredential);
-//var cosmosClient = new CosmosClient("AccountEndpoint=https://localhost:8081/;AccountKey=C2y6yDjf5/R+ob0N8A7Cgv30VRDJIWEHLM+4QDU5DE2nQ9nDuVTqobD4b8mGGyPMbIZnqyMsEcaGQy67XIw/Jw==");
-
-Database database = cosmosClient.GetDatabase("orbital");
-Container container = database.GetContainer("meetings");
-
-app.MapGet("/api/meetings", () =>
+app.MapGet("/api/meetings", async (CosmosClient client) =>
 {
-    return Results.Ok(container.GetItemLinqQueryable<Meeting>().ToList());
+    var container = client.GetContainer("orbital", "meetings");
+    var resultIterator = container.GetItemQueryIterator<Meeting>("SELECT * FROM c WHERE c.type='meeting'");
+    var meetings = new List<Meeting>();
+
+    while (resultIterator.HasMoreResults)
+    {
+        var resultSet = await resultIterator.ReadNextAsync();
+        foreach (var meeting in resultSet)
+        {
+            meetings.Add(meeting);
+        }
+    }
+    return Results.Ok(meetings);
 });
 
-app.MapGet("api/meetings/{id}", async (string id) =>
+app.MapGet("api/meetings/{id}", async (CosmosClient client, string id) =>
 {
     try
     {
+        var container = client.GetContainer("orbital", "meetings");
         var response = await container.ReadItemAsync<Meeting>(id, new PartitionKey("meeting"));
         return Results.Ok(response.Resource);
     }
@@ -59,10 +58,11 @@ app.MapGet("api/meetings/{id}", async (string id) =>
 
 });
 
-app.MapPost("/api/meetings", async (Meeting meeting) =>
+app.MapPost("/api/meetings", async (CosmosClient client, Meeting meeting) =>
 {
     try
     {
+        var container = client.GetContainer("orbital", "meetings");
         var response = await container.CreateItemAsync(meeting, new PartitionKey(meeting.type));
         return Results.Created($"/api/meetings/{meeting.id}", meeting);
     }
