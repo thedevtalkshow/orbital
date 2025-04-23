@@ -1,0 +1,70 @@
+﻿@using orbital.core
+
+<h3>MeetingComponent</h3>
+
+<div class="meeting-card">
+    <div class="meeting-header">
+        <h3 class="meeting-title">@Meeting?.Title</h3>
+        <div class="meeting-time-badge">
+            <span class="meeting-duration">@GetDuration()</span>
+        </div>
+    </div>
+    
+    <div class="meeting-content">
+        @if (!string.IsNullOrEmpty(Meeting?.Description))
+        {
+            <div class="meeting-description">
+                <p>@Meeting.Description</p>
+            </div>
+        }
+        
+        <div class="meeting-details">
+            <div class="meeting-datetime">
+                <div class="meeting-date">
+                    <span class="icon">📅</span>
+                    <span>@FormatDate(Meeting?.StartTime)</span>
+                </div>
+                <div class="meeting-time">
+                    <span class="icon">⏰</span>
+                    <span>@FormatTimeRange(Meeting?.StartTime, Meeting?.EndTime)</span>
+                </div>
+            </div>
+            
+            @if (!string.IsNullOrEmpty(Meeting?.id))
+            {
+                <div class="meeting-id">ID: @Meeting.id</div>
+            }
+        </div>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public Meeting? Meeting { get; set; }
+
+    private string GetDuration()
+    {
+        if (Meeting?.StartTime == null || Meeting?.EndTime == null)
+            return string.Empty;
+            
+        TimeSpan duration = Meeting.EndTime - Meeting.StartTime;
+        
+        if (duration.TotalHours >= 1)
+            return $"{Math.Floor(duration.TotalHours)}h {duration.Minutes}m";
+        else
+            return $"{duration.Minutes}m";
+    }
+    
+    private string FormatDate(DateTime? dateTime)
+    {
+        return dateTime?.ToString("dddd, MMMM d, yyyy") ?? string.Empty;
+    }
+    
+    private string FormatTimeRange(DateTime? start, DateTime? end)
+    {
+        if (start == null || end == null)
+            return string.Empty;
+            
+        return $"{start.Value.ToString("h:mm tt")} - {end.Value.ToString("h:mm tt")}";
+    }
+}

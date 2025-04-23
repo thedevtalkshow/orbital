@@ -16,9 +16,10 @@ var cosmosdb = builder.AddAzureCosmosDB("cosmosdb").RunAsPreviewEmulator(
 var database = cosmosdb.AddCosmosDatabase("orbital", "orbital");
 var container = database.AddContainer("meetings", "/type", "meetings");
 
-builder.AddProject<Projects.orbital_api>("orbital-api")
+var orbital_api = builder.AddProject<Projects.orbital_api>("orbital-api")
         .WithReference(cosmosdb);
 
-builder.AddProject<orbital_web>("web");
+builder.AddProject<orbital_web>("web")
+        .WithReference(orbital_api);
 
 builder.Build().Run();
