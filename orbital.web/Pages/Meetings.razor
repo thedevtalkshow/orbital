@@ -1,0 +1,24 @@
+﻿@page "/meetings"
+@using orbital.core
+
+@inject HttpClient client
+
+<h3>Meetings</h3>
+
+@code {
+    // calls the API to get the meetings
+    private List<Meeting> meetings = new List<Meeting>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            meetings = await client.GetFromJsonAsync<List<Meeting>>("api/meetings");
+        }
+        catch (Exception ex)
+        {
+            
+            throw;
+        }
+    }
+}
