@@ -10,7 +10,6 @@ var cosmosdb = builder.AddAzureCosmosDB("cosmosdb").RunAsPreviewEmulator(
     {
         emulator.WithDataExplorer(8888);
         emulator.WithDataVolume();
-        //emulator.WithHttpEndpoint(8889);
         emulator.WithLifetime(ContainerLifetime.Persistent);
     });
 
