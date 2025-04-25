@@ -1,9 +1,24 @@
 ﻿@page "/meetings"
 @using orbital.core
+@using orbital.web.Services
+@using orbital.web.Components
 
-@inject HttpClient client
+@inject MeetingsService meetingsService
 
 <h3>Meetings</h3>
+<div class="meeting-list">
+    @if (meetings == null || meetings.Count == 0)
+    {
+        <p>No meetings available.</p>
+    }
+    else
+    {
+        foreach (var meeting in meetings)
+        {
+            <MeetingComponent Meeting="meeting" />
+        }
+    }
+</div>
 
 @code {
     // calls the API to get the meetings
@@ -13,11 +28,11 @@
     {
         try
         {
-            meetings = await client.GetFromJsonAsync<List<Meeting>>("api/meetings");
+            meetings = await meetingsService.GetMeetingsAsync();
         }
         catch (Exception ex)
         {
-            
+            // logger.LogError($"Meetings page error: {ex.Message}");
             throw;
         }
     }

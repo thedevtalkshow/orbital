@@ -1,33 +1,19 @@
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using orbital.web;
+using orbital.web.Services;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.RootComponents.Add<App>("#app");
 builder.RootComponents.Add<HeadOutlet>("head::after");
 
+var MeetingsEndpoint = builder.Configuration["MeetingsEndpoint"];
+
+builder.Services.AddLogging();
+
 // Add HttpClient for browser navigation
-builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
+builder.Services.AddSingleton<HttpClient>(hc => new HttpClient() { BaseAddress = new Uri("https://localhost:7024") });
 
-//// Add HttpClient for orbital.api communication
-//builder.Services.AddScoped(sp => 
-//{
-//    // In development, API typically runs at a specific port
-//    // In production, this would be configured differently (e.g., from configuration)
-//    var apiBaseAddress = builder.HostEnvironment.IsDevelopment()
-//        ? new Uri("https://orbital-api") // Default Aspire development port for the API
-//        : new Uri(builder.Configuration["ApiBaseAddress"] ?? "https://api.orbital.com");
-
-//    return new HttpClient { BaseAddress = apiBaseAddress };
-//}, serviceKey: "OrbitalApi");
-
-
-// Alternative approach using named HttpClient with typed client
-// builder.Services.AddHttpClient("OrbitalApi", client =>
-// {
-//     client.BaseAddress = new Uri(builder.HostEnvironment.IsDevelopment()
-//         ? "https://localhost:7154"
-//         : builder.Configuration["ApiBaseAddress"] ?? "https://api.orbital.com");
-// });
+builder.Services.AddScoped<MeetingsService>();
 
 await builder.Build().RunAsync();
