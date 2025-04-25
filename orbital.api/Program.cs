@@ -10,7 +10,16 @@ builder.AddServiceDefaults();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
 
-//add openAPI support
+// Add CORS policy scoped to localhost:7024
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("LocalhostPolicy", policy =>
+    {
+        policy.AllowAnyOrigin()
+              .AllowAnyMethod()
+              .AllowAnyHeader();
+    });
+});
 
 builder.AddAzureCosmosClient("cosmosdb");
 
@@ -23,6 +32,11 @@ if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
 }
+
+app.UseRouting();
+
+// Add CORS middleware - must be before UseHttpsRedirection and endpoint routing
+app.UseCors("LocalhostPolicy");
 
 app.UseHttpsRedirection();
 
