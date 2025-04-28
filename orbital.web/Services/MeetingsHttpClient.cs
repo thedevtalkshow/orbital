@@ -30,5 +30,11 @@ namespace orbital.web.Services
                 throw new Exception("Failed to load meetings");
             }
         }
+
+        public async Task<bool> AddMeetingAsync(Meeting meeting)
+        {
+            var response = await _httpClient.PostAsJsonAsync("/api/meetings", meeting);
+            return response.IsSuccessStatusCode;
+        }
     }
 }
