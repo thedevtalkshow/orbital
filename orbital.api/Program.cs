@@ -21,7 +21,15 @@ builder.Services.AddCors(options =>
     });
 });
 
-builder.AddAzureCosmosClient("cosmosdb");
+builder.AddAzureCosmosClient("cosmosdb", configureClientOptions: clientOptions =>
+{
+    clientOptions.SerializerOptions = new CosmosSerializationOptions()
+    {
+        IgnoreNullValues = true,
+        Indented = false,
+        PropertyNamingPolicy = CosmosPropertyNamingPolicy.CamelCase
+    };
+});
 
 var app = builder.Build();
 
@@ -77,14 +85,15 @@ app.MapPost("/api/meetings", async (CosmosClient client, Meeting meeting) =>
     try
     {
         var container = client.GetContainer("orbital", "meetings");
-        var response = await container.CreateItemAsync(meeting, new PartitionKey(meeting.type));
-        return Results.Created($"/api/meetings/{meeting.id}", meeting);
+        var response = await container.CreateItemAsync(meeting, new PartitionKey(meeting.Type));
+        return Results.Created($"/api/meetings/{meeting.Id}", meeting);
     }
     catch (Exception ex)
     {
         return Results.BadRequest(ex.Message);
     }
 });
+
 
 app.Run();
 
