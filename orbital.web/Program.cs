@@ -7,12 +7,14 @@ var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.RootComponents.Add<App>("#app");
 builder.RootComponents.Add<HeadOutlet>("head::after");
 
-var MeetingsEndpoint = builder.Configuration["MeetingsEndpoint"];
+var MeetingsEndpoint = builder.Configuration["MeetingsEndpoint"] ?? "https://localhost:7024";
 
 builder.Services.AddLogging();
 
-// Add HttpClient for browser navigation
-builder.Services.AddSingleton<HttpClient>(hc => new HttpClient() { BaseAddress = new Uri("https://localhost:7024") });
+builder.Services.AddHttpClient<IMeetingsService, MeetingsHttpClient>(client =>
+{
+    client.BaseAddress = new Uri(MeetingsEndpoint);
+});
 
 builder.Services.AddScoped<MeetingsService>();
 
