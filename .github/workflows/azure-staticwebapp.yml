@@ -12,13 +12,6 @@
 #    For instructions on setting up the appropriate configuration values go to https://docs.microsoft.com/azure/static-web-apps/front-end-frameworks
 name: Deploy web app to Azure Static Web Apps
 
-on:
-  push:
-    branches: [ "main" ]
-  pull_request:
-    types: [opened, synchronize, reopened, closed]
-    branches: [ "main" ]
-
 # Environment variables available to all jobs and steps in this workflow
 env:
   APP_LOCATION: "orbital.web" # location of your client code
