@@ -12,6 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\orbital.data\orbital.data.csproj" />
     <ProjectReference Include="..\orbital.ServiceDefaults\orbital.ServiceDefaults.csproj" />
 	<ProjectReference Include="..\orbital.core\orbital.core.csproj" />
   </ItemGroup>

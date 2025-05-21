@@ -1,6 +1,7 @@
-using Azure.Identity;
 using Microsoft.Azure.Cosmos;
 using orbital.core;
+using orbital.core.Data;
+using orbital.data.CosmosDb;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -31,6 +32,9 @@ builder.AddAzureCosmosClient("cosmosdb", configureClientOptions: clientOptions =
     };
 });
 
+builder.Services.AddScoped<IMeetingRepository, CosmosMeetingRepository>();
+
+
 var app = builder.Build();
 
 app.MapDefaultEndpoints();
@@ -48,21 +52,35 @@ app.UseCors("LocalhostPolicy");
 
 app.UseHttpsRedirection();
 
-app.MapGet("/api/meetings", async (CosmosClient client) =>
-{
-    var container = client.GetContainer("orbital", "meetings");
-    var resultIterator = container.GetItemQueryIterator<Meeting>("SELECT * FROM c WHERE c.type='meeting'");
-    var meetings = new List<Meeting>();
+//app.MapGet("/api/meetings", async (CosmosClient client) =>
+//{
+//    var container = client.GetContainer("orbital", "meetings");
+//    var resultIterator = container.GetItemQueryIterator<Meeting>("SELECT * FROM c WHERE c.type='meeting'");
+//    var meetings = new List<Meeting>();
 
-    while (resultIterator.HasMoreResults)
+//    while (resultIterator.HasMoreResults)
+//    {
+//        var resultSet = await resultIterator.ReadNextAsync();
+//        foreach (var meeting in resultSet)
+//        {
+//            meetings.Add(meeting);
+//        }
+//    }
+//    return Results.Ok(meetings);
+//});
+
+app.MapGet("/api/meetings", async (IMeetingRepository repo) =>
+{
+    try
     {
-        var resultSet = await resultIterator.ReadNextAsync();
-        foreach (var meeting in resultSet)
-        {
-            meetings.Add(meeting);
-        }
+        var meetings = await repo.GetMeetingsAsync();
+        return Results.Ok(meetings);
     }
-    return Results.Ok(meetings);
+    catch (Exception ex)
+    {
+        // Log the error as needed
+        return Results.Problem("Error retrieving meetings: " + ex.Message);
+    }
 });
 
 app.MapGet("api/meetings/{id}", async (CosmosClient client, string id) =>
@@ -93,7 +111,7 @@ app.MapPost("/api/meetings", async (CosmosClient client, Meeting meeting) =>
         return Results.BadRequest(ex.Message);
     }
 });
-
+ 
 
 app.Run();
 
