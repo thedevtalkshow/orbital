@@ -65,7 +65,7 @@ app.MapGet("/api/meetings", async (CosmosClient client) =>
     return Results.Ok(meetings);
 });
 
-app.MapGet("api/meetings/{id}", async (CosmosClient client, string id) =>
+app.MapGet("/api/meetings/{id}", async (CosmosClient client, string id) =>
 {
     try
     {

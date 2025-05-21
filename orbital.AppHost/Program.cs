@@ -17,7 +17,7 @@ var container = database.AddContainer("meetings", "/type", "meetings");
 var orbital_api = builder.AddProject<orbital_api>("orbital-api")
         .WithReference(cosmosdb);
 
-builder.AddProject<orbital_web>("web")
+builder.AddProject<orbital_web>("orbital-web")
         .WithReference(orbital_api);
 
 builder.Build().Run();
