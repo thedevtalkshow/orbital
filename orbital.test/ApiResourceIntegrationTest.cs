@@ -8,8 +8,8 @@ namespace orbital.test
 
         // Use NUnit's [TestCase] attribute for generic input pattern
         [TestCase("/", HttpStatusCode.NotFound, TestName = "GetApiResourceRootReturnsNotFoundStatusCode")]
-        [TestCase("/api/Meetings", HttpStatusCode.OK, TestName = "GetApiMeetingsListReturnsOkStatusCode")]
-        [TestCase("/api/Meetings/3", HttpStatusCode.OK, TestName = "GetApiMeetingsItemReturnsOkStatusCode")]
+        [TestCase("/api/meetings", HttpStatusCode.OK, TestName = "GetApiMeetingsListReturnsOkStatusCode")]
+        [TestCase("/api/meetings/3", HttpStatusCode.OK, TestName = "GetApiMeetingsItemReturnsOkStatusCode")]
         public async Task GetApiEndpointReturnsExpectedStatusCode(string route, HttpStatusCode expectedStatusCode)
         {
             // Arrange
