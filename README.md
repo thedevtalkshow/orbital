@@ -20,7 +20,7 @@ Orbital is built as a modern, cloud-native application using .NET technologies:
 
 ## Technology Stack
 
-- **.NET 8**: Latest .NET framework with Aspire
+- **.NET 9**: Latest .NET framework with Aspire
 - **Blazor WebAssembly**: Client-side web UI framework
 - **Azure CosmosDB**: NoSQL database for meeting data storage
 - **ASP.NET Core**: Web API for backend services
@@ -30,7 +30,7 @@ Orbital is built as a modern, cloud-native application using .NET technologies:
 
 To run this project locally:
 
-1. Ensure you have .NET 8 SDK installed with Aspire workload
+1. Ensure you have .NET 9 SDK installed with Aspire workload
 2. Clone the repository
 3. Open the solution in Visual Studio 2022 or later
 4. Start the project with the orbital.AppHost as the startup project
