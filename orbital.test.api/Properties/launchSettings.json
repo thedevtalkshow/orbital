@@ -1,0 +1,12 @@
+{
+  "profiles": {
+    "orbital.test.api": {
+      "commandName": "Project",
+      "launchBrowser": true,
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      },
+      "applicationUrl": "https://localhost:56063;http://localhost:56064"
+    }
+  }
+}
