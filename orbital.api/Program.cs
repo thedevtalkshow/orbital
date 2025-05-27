@@ -1,6 +1,7 @@
-using Azure.Identity;
 using Microsoft.Azure.Cosmos;
 using orbital.core;
+using orbital.core.Data;
+using orbital.data;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -31,6 +32,8 @@ builder.AddAzureCosmosClient("cosmosdb", configureClientOptions: clientOptions =
     };
 });
 
+builder.Services.AddScoped<IMeetingRepository, CosmosMeetingRepository>();
+
 var app = builder.Build();
 
 app.MapDefaultEndpoints();
@@ -48,20 +51,9 @@ app.UseCors("LocalhostPolicy");
 
 app.UseHttpsRedirection();
 
-app.MapGet("/api/meetings", async (CosmosClient client) =>
+app.MapGet("/api/meetings", async (IMeetingRepository repository) =>
 {
-    var container = client.GetContainer("orbital", "meetings");
-    var resultIterator = container.GetItemQueryIterator<Meeting>("SELECT * FROM c WHERE c.type='meeting'");
-    var meetings = new List<Meeting>();
-
-    while (resultIterator.HasMoreResults)
-    {
-        var resultSet = await resultIterator.ReadNextAsync();
-        foreach (var meeting in resultSet)
-        {
-            meetings.Add(meeting);
-        }
-    }
+    var meetings = await repository.GetMeetingsAsync();
     return Results.Ok(meetings);
 });
 
@@ -96,6 +88,8 @@ app.MapPost("/api/meetings", async (CosmosClient client, Meeting meeting) =>
 
 
 app.Run();
+
+public partial class Program { }
 
 record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
 {
