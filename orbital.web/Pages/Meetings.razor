@@ -35,12 +35,12 @@
                 <div class="row mb-3">
                     <div class="col">
                         <label for="startTime" class="form-label">Start Time</label>
-                        <InputDate id="startTime" @bind-Value="newMeeting.StartTime" class="form-control" />
+                        <InputDate id="startTime" Type="InputDateType.DateTimeLocal" @bind-Value="newMeeting.StartTime" class="form-control" />
                         <ValidationMessage For="@(() => newMeeting.StartTime)" />
                     </div>
                     <div class="col">
                         <label for="endTime" class="form-label">End Time</label>
-                        <InputDate id="endTime" @bind-Value="newMeeting.EndTime" class="form-control" />
+                        <InputDate id="endTime" Type="InputDateType.DateTimeLocal" @bind-Value="newMeeting.EndTime" class="form-control" />
                         <ValidationMessage For="@(() => newMeeting.EndTime)" />
                     </div>
                 </div>
