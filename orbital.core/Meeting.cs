@@ -6,7 +6,7 @@ public class Meeting
 {
     public string Id { get; set; }
 
-    public string Type => "meeting";
+    public static string Type => "meeting";
 
     [Required(ErrorMessage = "Title is required")]
     [StringLength(100, ErrorMessage = "Title cannot exceed 100 characters")]
