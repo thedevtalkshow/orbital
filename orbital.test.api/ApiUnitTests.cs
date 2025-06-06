@@ -60,14 +60,27 @@ namespace orbital.test.api
         }
 
         [Fact]
-        public async Task Hello_ReturnsOk()
+        public async Task CreateMeeting_ReturnsCreatedStatusCode()
         {
             // Arrange
             var client = _factory.CreateClient();
+            var newMeeting = new Meeting
+            {
+                Id = "3",
+                Title = "Test Meeting",
+                Description = "This is a test meeting.",
+                StartTime = DateTime.UtcNow,
+                EndTime = DateTime.UtcNow.AddHours(1)
+            };
             // Act
-            var response = await client.GetAsync("/api/hello");
+            var response = await client.PostAsJsonAsync("/api/meetings", newMeeting);
             // Assert
-            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            Assert.Equal(HttpStatusCode.Created, response.StatusCode);
+            var createdMeeting = await response.Content.ReadFromJsonAsync<Meeting>();
+
+            // ? -- should these be part of separate tests (perhaps data driven tests)?
+            Assert.NotNull(createdMeeting);
+            Assert.Equal(newMeeting.Id, createdMeeting.Id);
         }
     }
 }
