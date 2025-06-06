@@ -51,11 +51,9 @@ app.UseCors("LocalhostPolicy");
 
 app.UseHttpsRedirection();
 
-app.MapGet("api/hello", () => "Hello World!");
-
 app.MapGet("/api/meetings", async (IMeetingRepository repository) =>
 {
-    var meetings = await repository.GetMeetingsAsync();
+    var meetings = await repository.ListMeetingsAsync();
     return Results.Ok(meetings);
 });
 
@@ -65,18 +63,10 @@ app.MapGet("/api/meetings/{id}", async (string id, IMeetingRepository repository
     return meeting;
 });
 
-app.MapPost("/api/meetings", async (CosmosClient client, Meeting meeting) =>
+app.MapPost("/api/meetings", async (Meeting meeting, IMeetingRepository repository) =>
 {
-    try
-    {
-        var container = client.GetContainer("orbital", "meetings");
-        var response = await container.CreateItemAsync(meeting, new PartitionKey(Meeting.Type));
-        return Results.Created($"/api/meetings/{meeting.Id}", meeting);
-    }
-    catch (Exception ex)
-    {
-        return Results.BadRequest(ex.Message);
-    }
+    var createdMeeting = await repository.CreateMeetingAsync(meeting);
+    return Results.Created($"/api/meetings/{createdMeeting.Id}", createdMeeting);
 });
 
 

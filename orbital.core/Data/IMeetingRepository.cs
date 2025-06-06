@@ -4,8 +4,10 @@ namespace orbital.core.Data
 {
     public interface IMeetingRepository
     {
-        Task<IEnumerable<Meeting>> GetMeetingsAsync();
+        Task<IEnumerable<Meeting>> ListMeetingsAsync();
 
         Task<Meeting> GetMeetingByIdAsync(string id);
+
+        Task<Meeting> CreateMeetingAsync(Meeting meeting);
     }
 }

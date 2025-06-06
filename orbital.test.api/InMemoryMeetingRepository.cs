@@ -16,12 +16,18 @@ namespace orbital.test.api
             };
         }
 
+        public Task<Meeting> CreateMeetingAsync(Meeting meeting)
+        {
+            _meetings.Add(meeting);
+            return Task.FromResult(meeting);
+        }
+
         public Task<Meeting> GetMeetingByIdAsync(string id)
         {
             return Task.FromResult(_meetings.First(m => m.Id == id));
         }
 
-        public Task<IEnumerable<Meeting>> GetMeetingsAsync()
+        public Task<IEnumerable<Meeting>> ListMeetingsAsync()
         {
             return Task.FromResult<IEnumerable<Meeting>>(_meetings);
         }

@@ -15,12 +15,27 @@ namespace orbital.data
             _container = _client.GetContainer("orbital", "meetings");
         }
 
-        public Task<Meeting> GetMeetingByIdAsync(string id)
+        public async Task<Meeting> CreateMeetingAsync(Meeting meeting)
         {
-            throw new NotImplementedException();
+            Meeting createdMeeting = await _container.CreateItemAsync(meeting, new PartitionKey("meeting"));
+            return createdMeeting;
         }
 
-        public async Task<IEnumerable<Meeting>> GetMeetingsAsync()
+        public async Task<Meeting> GetMeetingByIdAsync(string id)
+        {
+            try
+            {
+                ItemResponse<Meeting> response = await _container.ReadItemAsync<Meeting>(id, new PartitionKey("meeting"));
+                return response.Resource;
+            }
+            catch (CosmosException ex) when (ex.StatusCode == System.Net.HttpStatusCode.NotFound)
+            {
+                // Item not found
+                return null;
+            }
+        }
+
+        public async Task<IEnumerable<Meeting>> ListMeetingsAsync()
         {
             var resultIterator = _container.GetItemQueryIterator<Meeting>("SELECT * FROM c WHERE c.type='meeting'");
             var meetings = new List<Meeting>();
