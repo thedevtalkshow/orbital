@@ -60,7 +60,13 @@ app.MapGet("/api/meetings", async (IMeetingRepository repository) =>
 app.MapGet("/api/meetings/{id}", async (string id, IMeetingRepository repository) =>
 {
     var meeting = await repository.GetMeetingByIdAsync(id);
-    return meeting;
+    
+    if (meeting == null)
+    {
+        return Results.NotFound();
+    }
+
+    return Results.Ok(meeting);
 });
 
 app.MapPost("/api/meetings", async (Meeting meeting, IMeetingRepository repository) =>
