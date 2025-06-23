@@ -16,6 +16,4 @@ builder.Services.AddHttpClient<IMeetingsService, MeetingsHttpClient>(client =>
     client.BaseAddress = new Uri(MeetingsEndpoint);
 });
 
-builder.Services.AddScoped<MeetingsService>();
-
 await builder.Build().RunAsync();
