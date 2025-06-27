@@ -32,6 +32,16 @@
                     <InputTextArea id="description" @bind-Value="newMeeting.Description" class="form-control" rows="3" />
                 </div>
                 
+                <div class="mb-3">
+                    <label for="location" class="form-label">Location</label>
+                    <InputText id="location" @bind-Value="newMeeting.Location" class="form-control" />
+                </div>
+                
+                <div class="mb-3">
+                    <label for="keywords" class="form-label">Keywords (comma-separated)</label>
+                    <InputText id="keywords" @bind-Value="keywordsText" class="form-control" placeholder="e.g. important, planning, quarterly" />
+                </div>
+                
                 <div class="row mb-3">
                     <div class="col">
                         <label for="startTime" class="form-label">Start Time</label>
@@ -78,6 +88,7 @@
     private bool showAddForm = false;
     private string formMessage = string.Empty;
     private bool formSuccess = false;
+    private string keywordsText = string.Empty; // For handling comma-separated keywords
 
     protected override async Task OnInitializedAsync()
     {
@@ -108,6 +119,7 @@
                 StartTime = DateTime.Now,
                 EndTime = DateTime.Now.AddHours(1)
             };
+            keywordsText = string.Empty;
             formMessage = string.Empty;
         }
     }
@@ -116,6 +128,16 @@
     {
         try
         {
+            // Process keywords from comma-separated string to list
+            if (!string.IsNullOrWhiteSpace(keywordsText))
+            {
+                newMeeting.Keywords = keywordsText
+                    .Split(',')
+                    .Select(k => k.Trim())
+                    .Where(k => !string.IsNullOrWhiteSpace(k))
+                    .ToList();
+            }
+            
             // Generate a temporary ID (the API will likely assign the real one)
             newMeeting.Id = Guid.NewGuid().ToString();
             
@@ -135,6 +157,7 @@
                     StartTime = DateTime.Now,
                     EndTime = DateTime.Now.AddHours(1)
                 };
+                keywordsText = string.Empty;
             }
             else
             {

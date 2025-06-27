@@ -31,6 +31,7 @@ public class Meeting
     /// </summary>
     public string About { get; set; } = string.Empty;
 
+    // TODO:update this to be the Attendee type
     /// <summary>
     /// A person or organization attending the event.
     /// </summary>
