@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc.Testing;
+using Microsoft.AspNetCore.Mvc.Testing;
 using orbital.core;
 using orbital.core.Data;
 using System.Net;

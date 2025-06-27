@@ -1,4 +1,4 @@
-﻿@page "/meetings"
+@page "/meetings"
 @using orbital.core
 @using orbital.web.Services
 @using orbital.web.Components
@@ -45,7 +45,7 @@
                 <div class="row mb-3">
                     <div class="col">
                         <label for="startTime" class="form-label">Start Time</label>
-                        <InputDate id="startTime" Type="InputDateType.DateTimeLocal" @bind-Value="newMeeting.StartTime" class="form-control" />
+                        <InputDate id="startTime" Type="InputDateType.DateTimeLocal" @bind-Value="newMeeting.StartTime" @bind-Value:after="UpdateEndTime" class="form-control" />
                         <ValidationMessage For="@(() => newMeeting.StartTime)" />
                     </div>
                     <div class="col">
@@ -102,12 +102,12 @@
             throw;
         }
     }
-    
+
     private async Task LoadMeetings()
     {
         meetings = await meetingsService.GetMeetingsAsync();
     }
-    
+
     private void ToggleAddMeetingForm()
     {
         showAddForm = !showAddForm;
@@ -123,7 +123,7 @@
             formMessage = string.Empty;
         }
     }
-    
+
     private async Task HandleValidSubmit()
     {
         try
@@ -137,20 +137,20 @@
                     .Where(k => !string.IsNullOrWhiteSpace(k))
                     .ToList();
             }
-            
+
             // Generate a temporary ID (the API will likely assign the real one)
             newMeeting.Id = Guid.NewGuid().ToString();
-            
+
             var result = await meetingsService.AddMeetingAsync(newMeeting);
-            
+
             if (result)
             {
                 formSuccess = true;
                 formMessage = "Meeting added successfully!";
-                
+
                 // Refresh the meetings list
                 await LoadMeetings();
-                
+
                 // Reset the form
                 newMeeting = new Meeting
                 {
@@ -170,5 +170,9 @@
             formSuccess = false;
             formMessage = $"Error: {ex.Message}";
         }
+    }
+    private void UpdateEndTime()
+    {
+        newMeeting.EndTime = newMeeting.StartTime.AddHours(2);
     }
 }

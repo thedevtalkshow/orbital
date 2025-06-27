@@ -16,6 +16,23 @@
             </div>
         }
         
+        <div class="meeting-location">
+            <div>Location: @Meeting?.Location</div>
+        </div>
+        
+        <div class="meeting-keywords">
+            <span class="keyword-label">Keywords: </span>
+            <div class="keyword-container">
+                @if (Meeting?.Keywords != null)
+                {
+                    @foreach(var word in Meeting.Keywords)
+                    {
+                        <span class="meeting-keyword">@word</span>
+                    }
+                }
+            </div>
+        </div>
+
         <div class="meeting-details">
             <div class="meeting-datetime">
                 <div class="meeting-date">
