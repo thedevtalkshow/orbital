@@ -47,6 +47,7 @@ public class Meeting
     /// </summary>
     public DateTime? DoorTime { get; set; }
 
+    // TODO: can this item be calculated on save event or when the properties are updated?
     /// <summary>
     /// The duration of the item in ISO 8601 duration format.
     /// </summary>

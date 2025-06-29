@@ -1,4 +1,5 @@
 using Microsoft.Azure.Cosmos;
+using orbital.api.EndPoints;
 using orbital.core;
 using orbital.core.Data;
 using orbital.data;
@@ -75,6 +76,8 @@ app.MapPost("/api/meetings", async (Meeting meeting, IMeetingRepository reposito
     return Results.Created($"/api/meetings/{createdMeeting.Id}", createdMeeting);
 });
 
+// register the metadata endpoints
+app.MapMetadataEndpoints();
 
 app.Run();
 
