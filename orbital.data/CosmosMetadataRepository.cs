@@ -34,7 +34,7 @@ public class CosmosMetadataRepository : IMetadataRepository
         return results;
     }
 
-    public async Task<T> GetMetadataItemValueAsync<T>(string metadataType, string value) where T : IMetadataItem
+    public async Task<T> GetMetadataItemByValueAsync<T>(string metadataType, string value) where T : IMetadataItem
     {
         var query = new QueryDefinition("SELECT * FROM c WHERE c.type = @type AND c.value = @value")
             .WithParameter("@type", metadataType)

@@ -1,4 +1,6 @@
-namespace orbital.core.Metadata;
+using orbital.core.Metadata;
+
+namespace orbital.core.Models;
 
 public class EventStatusDefinition : MetadataDefinition
 {

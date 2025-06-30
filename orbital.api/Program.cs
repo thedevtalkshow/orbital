@@ -1,5 +1,5 @@
 using Microsoft.Azure.Cosmos;
-using orbital.api.EndPoints;
+using orbital.api.Endpoints;
 using orbital.core;
 using orbital.core.Data;
 using orbital.data;

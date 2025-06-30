@@ -1,6 +1,6 @@
 using orbital.core.Metadata;
 
-namespace oribtal.core.Metadata;
+namespace orbital.core.Metadata;
 
 public abstract class MetadataDefinition : IMetadataItem
 {

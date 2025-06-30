@@ -1,0 +1,100 @@
+classDiagram
+    %% Core Classes and Interfaces
+    class IMetadataItem {
+        <<interface>>
+        +string Id
+        +string Type
+        +string Value
+        +string DisplayName
+        +bool IsActive
+    }
+    
+    class MetadataDefinition {
+        +string Id
+        +string Type
+        +string Value
+        +string DisplayName
+        +bool IsActive
+    }
+    
+    class EventStatusDefinition {
+        +string Id
+        +string Type
+        +string Value
+        +string DisplayName
+        +bool IsActive
+    }
+    
+    class IMetadataRepository {
+        <<interface>>
+        +Task~IEnumerable~IMetadataItem~~ GetMetadataItemsAsync(string type)
+        +Task~IMetadataItem~ GetMetadataItemByIdAsync(string id, string type)
+        +Task~IMetadataItem~ CreateMetadataItemAsync(IMetadataItem item)
+    }
+    
+    %% Server-side Implementation
+    class CosmosMetadataRepository {
+        -CosmosClient _client
+        -Container _container
+        +Task~IEnumerable~IMetadataItem~~ GetMetadataItemsAsync(string type)
+        +Task~IMetadataItem~ GetMetadataItemByIdAsync(string id, string type)
+        +Task~IMetadataItem~ CreateMetadataItemAsync(IMetadataItem item)
+    }
+    
+    %% API Service
+    class ApiMetadataService {
+        -IMetadataRepository _repository
+        -MemoryCache _cache
+        +Task~IEnumerable~T~~ GetMetadataItemsAsync<T>(string type)
+        +Task~T~ CreateMetadataItemAsync<T>(T item)
+        +Task RefreshCacheAsync(string type)
+    }
+    
+    %% Client-side Services
+    class IMetadataService {
+        <<interface>>
+        +Task~IEnumerable~T~~ GetMetadataItemsAsync<T>(string type)
+        +Task~T~ GetMetadataItemByValueAsync<T>(string type, string value)
+        +Task~IEnumerable~EventStatusDefinition~~ GetEventStatusesAsync()
+        +Task~IEnumerable~AttendanceModeDefinition~~ GetAttendanceModesAsync()
+    }
+    
+    class MetadataHttpClient {
+        -HttpClient _httpClient
+        +Task~IEnumerable~T~~ GetMetadataItemsAsync<T>(string type)
+        +Task~T~ GetMetadataItemByValueAsync<T>(string type, string value)
+        +Task~IEnumerable~EventStatusDefinition~~ GetEventStatusesAsync()
+        +Task~IEnumerable~AttendanceModeDefinition~~ GetAttendanceModesAsync()
+    }
+    
+    class CachedMetadataService {
+        -IMetadataService _metadataService
+        -Dictionary~string, object~ _cache
+        +Task~IEnumerable~T~~ GetMetadataItemsAsync<T>(string type)
+        +Task~T~ GetMetadataItemByValueAsync<T>(string type, string value)
+        +Task~IEnumerable~EventStatusDefinition~~ GetEventStatusesAsync()
+        +Task~IEnumerable~AttendanceModeDefinition~~ GetAttendanceModesAsync()
+        +void ClearCache(string type)
+    }
+    
+    %% API Endpoints
+    class MetadataEndpoints {
+        <<API>>
+        +GET_api_metadata_metadataType()
+        +GET_api_metadata_eventStatuses()
+        +GET_api_metadata_attendanceModes()
+    }
+    
+    %% Relationships
+    IMetadataItem <|.. MetadataDefinition : implements
+    MetadataDefinition <|-- EventStatusDefinition : extends
+    IMetadataRepository <|.. CosmosMetadataRepository : implements
+    
+    ApiMetadataService --> IMetadataRepository : uses
+    MetadataEndpoints --> ApiMetadataService : exposes
+    
+    IMetadataService <|.. MetadataHttpClient : implements
+    IMetadataService <|.. CachedMetadataService : implements
+    CachedMetadataService --> MetadataHttpClient : decorates
+    
+    MetadataHttpClient --> MetadataEndpoints : calls

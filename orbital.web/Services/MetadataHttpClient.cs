@@ -1,11 +1,17 @@
+using System.Net.Http.Json;
+using orbital.core.Metadata;
+using orbital.core.Models;
+
 namespace orbital.web.Services;
 
-public class MetadataClient : IMetadataClient
+public class MetadataHttpClient : IMetadataService
 {
     private readonly HttpClient _httpClient;
     private readonly Dictionary<string, object> _cache = new();
-    
-    public MetadataClient(HttpClient httpClient)
+
+    public IReadOnlyList<EventStatusDefinition> EventStatuses => throw new NotImplementedException();
+
+    public MetadataHttpClient(HttpClient httpClient)
     {
         _httpClient = httpClient;
     }
@@ -36,8 +42,8 @@ public class MetadataClient : IMetadataClient
     public Task<IEnumerable<EventStatusDefinition>> GetEventStatusesAsync() => 
         GetMetadataItemsAsync<EventStatusDefinition>("eventStatus");
         
-    public Task<IEnumerable<AttendanceModeDefinition>> GetAttendanceModesAsync() => 
-        GetMetadataItemsAsync<AttendanceModeDefinition>("attendanceMode");
+    // public Task<IEnumerable<AttendanceModeDefinition>> GetAttendanceModesAsync() => 
+    //     GetMetadataItemsAsync<AttendanceModeDefinition>("attendanceMode");
     
     public void ClearCache(string metadataType = null)
     {
@@ -56,5 +62,20 @@ public class MetadataClient : IMetadataClient
                 _cache.Remove(key);
             }
         }
+    }
+
+    Task<IEnumerable<EventStatusDefinition>> IMetadataService.GetEventStatusesAsync()
+    {
+        throw new NotImplementedException();
+    }
+
+    public T? GetMetadataItemByValue<T>(string metadataType, string value) where T : IMetadataItem
+    {
+        throw new NotImplementedException();
+    }
+
+    public bool IsValidMetadataValue(string metadataType, string value)
+    {
+        throw new NotImplementedException();
     }
 }

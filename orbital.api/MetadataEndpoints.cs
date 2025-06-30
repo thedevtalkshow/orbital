@@ -1,6 +1,7 @@
-using Microsoft.AspNetCore.Authorization;
-using orbital.core;
-using orbital.core.Services;
+// using Microsoft.AspNetCore.Authorization;
+using orbital.core.Data;
+using orbital.core.Metadata;
+using orbital.core.Models;
 
 namespace orbital.api.Endpoints;
 
@@ -12,9 +13,9 @@ public static class MetadataEndpoints
             .WithTags("Metadata");
 
         // Get event statuses
-        group.MapGet("/eventStatuses", async (IMetadataService metadataService) =>
+        group.MapGet("/eventStatuses", async (IMetadataRepository metadataRepository) =>
         {
-            var items = await metadataService.GetMetadataItemsAsync<EventStatusDefinition>("eventStatus");
+            var items = await metadataRepository.GetAllMetadataItemsAsync<EventStatusDefinition>("eventStatus");
             return Results.Ok(items);
         })
         .WithName("GetEventStatuses")
@@ -22,19 +23,19 @@ public static class MetadataEndpoints
         .Produces<IEnumerable<EventStatusDefinition>>(StatusCodes.Status200OK);
 
         // Get attendance modes
-        group.MapGet("/attendanceModes", async (IMetadataService metadataService) =>
-        {
-            var items = await metadataService.GetMetadataItemsAsync<AttendanceModeDefinition>("attendanceMode");
-            return Results.Ok(items);
-        })
-        .WithName("GetAttendanceModes")
-        .WithOpenApi()
-        .Produces<IEnumerable<AttendanceModeDefinition>>(StatusCodes.Status200OK);
+        // group.MapGet("/attendanceModes", async (IMetadataService metadataService) =>
+        // {
+        //     var items = await metadataService.GetMetadataItemsAsync<AttendanceModeDefinition>("attendanceMode");
+        //     return Results.Ok(items);
+        // })
+        // .WithName("GetAttendanceModes")
+        // .WithOpenApi()
+        // .Produces<IEnumerable<AttendanceModeDefinition>>(StatusCodes.Status200OK);
 
         // Generic endpoint for any metadata type
-        group.MapGet("/{metadataType}", async (string metadataType, IMetadataService metadataService) =>
+        group.MapGet("/{metadataType}", async (string metadataType, IMetadataRepository metadataRepository) =>
         {
-            var items = await metadataService.GetMetadataItemsAsync<MetadataDefinition>(metadataType);
+            var items = await metadataRepository.GetAllMetadataItemsAsync<IMetadataItem>(metadataType);
             return Results.Ok(items);
         })
         .WithName("GetMetadataByType")
@@ -46,7 +47,7 @@ public static class MetadataEndpoints
             .RequireAuthorization("Admin");
 
         // Create metadata item
-        adminGroup.MapPost("/", async (MetadataDefinition item, IMetadataService metadataService) =>
+        adminGroup.MapPost("/", async (MetadataDefinition item, IMetadataRepository metadataRepository) =>
         {
             // Implementation would depend on your service methods
             // This is a placeholder assuming you have a CreateMetadataItemAsync method
@@ -55,7 +56,7 @@ public static class MetadataEndpoints
                 return Results.BadRequest("Type and Value are required");
             }
 
-            var result = await metadataService.CreateMetadataItemAsync(item);
+            var result = await metadataRepository.CreateMetadataItemAsync(item);
             return Results.Created($"/api/metadata/{item.Type}/{result.Id}", result);
         })
         .WithName("CreateMetadataItem")
@@ -64,7 +65,7 @@ public static class MetadataEndpoints
         .Produces(StatusCodes.Status400BadRequest);
 
         // Update metadata item
-        adminGroup.MapPut("/", async (MetadataDefinition item, IMetadataService metadataService) =>
+        adminGroup.MapPut("/", async (MetadataDefinition item, IMetadataRepository metadataRepository) =>
         {
             // Implementation would depend on your service methods
             if (string.IsNullOrEmpty(item.Id) || string.IsNullOrEmpty(item.Type))
@@ -72,14 +73,14 @@ public static class MetadataEndpoints
                 return Results.BadRequest("Id and Type are required");
             }
 
-            var success = await metadataService.UpdateMetadataItemAsync(item);
+            var success = await metadataRepository.UpdateMetadataItemAsync(item);
             if (!success)
             {
                 return Results.NotFound();
             }
 
             // Refresh the cache for this metadata type
-            await metadataService.RefreshCacheAsync(item.Type);
+            // await metadataRepository.RefreshCacheAsync(item.Type);
             return Results.NoContent();
         })
         .WithName("UpdateMetadataItem")
@@ -89,17 +90,17 @@ public static class MetadataEndpoints
         .Produces(StatusCodes.Status400BadRequest);
 
         // Delete metadata item
-        adminGroup.MapDelete("/{metadataType}/{id}", async (string metadataType, string id, IMetadataService metadataService) =>
+        adminGroup.MapDelete("/{metadataType}/{id}", async (string metadataType, string id, IMetadataRepository metadataRepository) =>
         {
             // Implementation would depend on your service methods
-            var success = await metadataService.DeleteMetadataItemAsync(id, metadataType);
+            var success = await metadataRepository.DeleteMetadataItemAsync<IMetadataItem>(id, metadataType);
             if (!success)
             {
                 return Results.NotFound();
             }
 
             // Refresh the cache for this metadata type
-            await metadataService.RefreshCacheAsync(metadataType);
+            // await metadataRepository.RefreshCacheAsync(metadataType);
             return Results.NoContent();
         })
         .WithName("DeleteMetadataItem")
