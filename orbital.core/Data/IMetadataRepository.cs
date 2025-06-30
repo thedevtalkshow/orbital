@@ -11,5 +11,5 @@ public interface IMetadataRepository
     // Add, Update, Delete methods if needed
     Task<T> CreateMetadataItemAsync<T>(T item) where T : IMetadataItem;
     Task<bool> UpdateMetadataItemAsync<T>(T item) where T : IMetadataItem;
-    Task<bool> DeleteMEtadataItemAsync<T>(string id, string metadataType) where T : IMetadataItem;
+    Task<bool> DeleteMetadataItemAsync<T>(string id, string metadataType) where T : IMetadataItem;
 }
