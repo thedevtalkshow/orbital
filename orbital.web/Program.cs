@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
+using orbital.core.Metadata;
 using orbital.web;
 using orbital.web.Services;
 
@@ -12,6 +13,12 @@ var MeetingsEndpoint = builder.Configuration["MeetingsEndpoint"] ?? "https://loc
 builder.Services.AddLogging();
 
 builder.Services.AddHttpClient<IMeetingsService, MeetingsHttpClient>(client =>
+{
+    client.BaseAddress = new Uri(MeetingsEndpoint);
+});
+
+// Metadata HttpClient
+builder.Services.AddHttpClient<IMetadataService, MetadataHttpClient>(client =>
 {
     client.BaseAddress = new Uri(MeetingsEndpoint);
 });

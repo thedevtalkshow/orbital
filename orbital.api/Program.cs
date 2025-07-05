@@ -33,7 +33,10 @@ builder.AddAzureCosmosClient("cosmosdb", configureClientOptions: clientOptions =
     };
 });
 
+builder.AddAzureCosmosContainer(connectionName: "metadataContainer");
+
 builder.Services.AddScoped<IMeetingRepository, CosmosMeetingRepository>();
+builder.Services.AddScoped<IMetadataRepository, CosmosMetadataRepository>();
 
 var app = builder.Build();
 
