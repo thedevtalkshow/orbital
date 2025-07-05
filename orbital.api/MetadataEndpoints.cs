@@ -42,22 +42,22 @@ public static class MetadataEndpoints
         .WithOpenApi()
         .Produces<IEnumerable<MetadataDefinition>>(StatusCodes.Status200OK);
 
-        // Admin endpoints for CRUD operations
-        var adminGroup = group.MapGroup("/admin")
-            .RequireAuthorization("Admin");
+        // // Admin endpoints for CRUD operations
+        var adminGroup = group.MapGroup("/admin");
+            //.RequireAuthorization("Admin");
 
         // Create metadata item
         adminGroup.MapPost("/", async (MetadataDefinition item, IMetadataRepository metadataRepository) =>
         {
             // Implementation would depend on your service methods
             // This is a placeholder assuming you have a CreateMetadataItemAsync method
-            if (string.IsNullOrEmpty(item.Type) || string.IsNullOrEmpty(item.Value))
+            if (string.IsNullOrEmpty(item.type) || string.IsNullOrEmpty(item.Value))
             {
                 return Results.BadRequest("Type and Value are required");
             }
 
             var result = await metadataRepository.CreateMetadataItemAsync(item);
-            return Results.Created($"/api/metadata/{item.Type}/{result.Id}", result);
+            return Results.Created($"/api/metadata/{item.type}/{result.id}", result);
         })
         .WithName("CreateMetadataItem")
         .WithOpenApi()
@@ -68,7 +68,7 @@ public static class MetadataEndpoints
         adminGroup.MapPut("/", async (MetadataDefinition item, IMetadataRepository metadataRepository) =>
         {
             // Implementation would depend on your service methods
-            if (string.IsNullOrEmpty(item.Id) || string.IsNullOrEmpty(item.Type))
+            if (string.IsNullOrEmpty(item.id) || string.IsNullOrEmpty(item.type))
             {
                 return Results.BadRequest("Id and Type are required");
             }

@@ -8,13 +8,10 @@ namespace orbital.data;
 
 public class CosmosMetadataRepository : IMetadataRepository
 {
-    private readonly Container _container;
-    private readonly CosmosClient _client;
-
-    public CosmosMetadataRepository(CosmosClient client, string databaseName, string containerName)
+    private readonly Container _metadataContainer;
+    public CosmosMetadataRepository(Container metadataContainer)
     {
-        _client = client;
-        _container = _client.GetContainer(databaseName, containerName);
+        _metadataContainer = metadataContainer;
     }
 
     public async Task<IEnumerable<T>> GetAllMetadataItemsAsync<T>(string metadataType) where T : IMetadataItem
@@ -22,7 +19,7 @@ public class CosmosMetadataRepository : IMetadataRepository
         var query = new QueryDefinition("SELECT * FROM c WHERE c.type = @type AND c.isActive = true ORDER BY c.sortOrder")
             .WithParameter("@type", metadataType);
 
-        var iterator = _container.GetItemQueryIterator<T>(query);
+        var iterator = _metadataContainer.GetItemQueryIterator<T>(query);
 
         var results = new List<T>();
         while (iterator.HasMoreResults)
@@ -40,7 +37,7 @@ public class CosmosMetadataRepository : IMetadataRepository
             .WithParameter("@type", metadataType)
             .WithParameter("@value", value);
 
-        var iterator = _container.GetItemQueryIterator<T>(query);
+        var iterator = _metadataContainer.GetItemQueryIterator<T>(query);
 
         if (iterator.HasMoreResults)
         {
@@ -57,7 +54,7 @@ public class CosmosMetadataRepository : IMetadataRepository
             .WithParameter("@type", metadataType)
             .WithParameter("@value", value);
 
-        var iterator = _container.GetItemQueryIterator<int>(query);
+        var iterator = _metadataContainer.GetItemQueryIterator<int>(query);
 
         if (iterator.HasMoreResults)
         {
@@ -70,12 +67,12 @@ public class CosmosMetadataRepository : IMetadataRepository
 
     public async Task<T> CreateMetadataItemAsync<T>(T item) where T : IMetadataItem
     {
-        if (string.IsNullOrEmpty(item.Id))
+        if (string.IsNullOrEmpty(item.id))
         {
-            item.Id = Guid.NewGuid().ToString();
+            item.id = Guid.NewGuid().ToString();
         }
 
-        var response = await _container.CreateItemAsync(item, new PartitionKey(item.Type));
+        var response = await _metadataContainer.CreateItemAsync(item, new PartitionKey(item.type));
         return response.Resource;
     }
 
@@ -83,7 +80,7 @@ public class CosmosMetadataRepository : IMetadataRepository
     {
         try
         {
-            await _container.ReplaceItemAsync(item, item.Id, new PartitionKey(item.Type));
+            await _metadataContainer.ReplaceItemAsync(item, item.id, new PartitionKey(item.type));
             return true;
         }
         catch (CosmosException ex) when (ex.StatusCode == System.Net.HttpStatusCode.NotFound)
@@ -96,7 +93,7 @@ public class CosmosMetadataRepository : IMetadataRepository
     {
         try
         {
-            await _container.DeleteItemAsync<T>(id, new PartitionKey(metadataType));
+            await _metadataContainer.DeleteItemAsync<T>(id, new PartitionKey(metadataType));
 
             return true;
         }

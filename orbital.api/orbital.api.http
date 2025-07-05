@@ -1,6 +1,18 @@
-@orbital.api_HostAddress = http://localhost:5046
+@orbital_api_HostAddress = https://localhost:7024
 
-GET {{orbital.api_HostAddress}}/weatherforecast/
+POST {{orbital_api_HostAddress}}/api/metadata/admin
 Accept: application/json
+Content-Type: application/json
+
+{
+    "id": "1",
+    "type": "eventStatus",
+    "value": "Scheduled",
+    "DescriptionName": "Event Status Scheduled",
+    "Description": "Evenet Status Scheduled Item",
+    "IsActive": true,
+    "SortOrder": 0
+}
+
 
 ###

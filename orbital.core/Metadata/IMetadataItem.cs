@@ -2,8 +2,8 @@ namespace orbital.core.Metadata;
 
 public interface IMetadataItem
 {
-    string Id { get; set; }
-    string Type { get; set; }
+    string id { get; set; }
+    string type { get; set; }
     string Value { get; set; }
     string DisplayName { get; set; }
     string Description { get; set; }

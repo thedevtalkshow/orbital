@@ -1,11 +1,14 @@
+using System.Text.Json.Serialization;
 using orbital.core.Metadata;
 
 namespace orbital.core.Metadata;
 
-public abstract class MetadataDefinition : IMetadataItem
+public class MetadataDefinition : IMetadataItem
 {
-    public string Id { get; set; } = string.Empty;
-    public string Type { get; set; } = string.Empty;
+    [JsonPropertyName("id")]
+    public string id { get; set; } = string.Empty;
+    [JsonPropertyName("type")]
+    public string type { get; set; } = string.Empty;
     public string Value { get; set; } = string.Empty;
     public string DisplayName { get; set; } = string.Empty;
     public string Description { get; set; } = string.Empty;
