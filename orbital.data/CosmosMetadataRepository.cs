@@ -16,7 +16,7 @@ public class CosmosMetadataRepository : IMetadataRepository
 
     public async Task<IEnumerable<T>> GetAllMetadataItemsAsync<T>(string metadataType) where T : IMetadataItem
     {
-        var query = new QueryDefinition("SELECT * FROM c WHERE c.type = @type AND c.isActive = true ORDER BY c.sortOrder")
+        var query = new QueryDefinition("SELECT * FROM c WHERE c.type = @type AND c.IsActive = true ORDER BY c.SortOrder")
             .WithParameter("@type", metadataType);
 
         var iterator = _metadataContainer.GetItemQueryIterator<T>(query);
@@ -50,7 +50,7 @@ public class CosmosMetadataRepository : IMetadataRepository
 
     public async Task<bool> IsValidMetadataValueAsync(string metadataType, string value)
     {
-        var query = new QueryDefinition("SELECT VALUE COUNT(1) FROM c WHERE c.type = @type AND c.value = @value AND c.isActive = true")
+        var query = new QueryDefinition("SELECT VALUE COUNT(1) FROM c WHERE c.type = @type AND c.value = @value AND c.IsActive = true")
             .WithParameter("@type", metadataType)
             .WithParameter("@value", value);
 
@@ -80,7 +80,7 @@ public class CosmosMetadataRepository : IMetadataRepository
     {
         try
         {
-            await _metadataContainer.ReplaceItemAsync(item, item.id, new PartitionKey(item.type));
+            await _metadataContainer.ReplaceItemAsync<T>(item, item.id, new PartitionKey(item.type));
             return true;
         }
         catch (CosmosException ex) when (ex.StatusCode == System.Net.HttpStatusCode.NotFound)
@@ -89,6 +89,13 @@ public class CosmosMetadataRepository : IMetadataRepository
         }
     }
 
+    /// <summary>
+    /// This is 'logical' delete of a metadata item by setting the IsActive flag to false.
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <param name="id"></param>
+    /// <param name="metadataType"></param>
+    /// <returns></returns>
     public async Task<bool> DeleteMetadataItemAsync<T>(string id, string metadataType) where T : IMetadataItem
     {
         try

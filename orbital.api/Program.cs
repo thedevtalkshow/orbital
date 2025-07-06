@@ -33,6 +33,8 @@ builder.AddAzureCosmosClient("cosmosdb", configureClientOptions: clientOptions =
     };
 });
 
+//AppHost - container references included with the api project.
+// builder.AddAzureCosmosContainer(connectionName: "meetingContainer"); //TODO: this does not work. We need keyed service here to support multiple containers.
 builder.AddAzureCosmosContainer(connectionName: "metadataContainer");
 
 builder.Services.AddScoped<IMeetingRepository, CosmosMeetingRepository>();
@@ -55,29 +57,8 @@ app.UseCors("LocalhostPolicy");
 
 app.UseHttpsRedirection();
 
-app.MapGet("/api/meetings", async (IMeetingRepository repository) =>
-{
-    var meetings = await repository.ListMeetingsAsync();
-    return Results.Ok(meetings);
-});
-
-app.MapGet("/api/meetings/{id}", async (string id, IMeetingRepository repository) =>
-{
-    var meeting = await repository.GetMeetingByIdAsync(id);
-    
-    if (meeting == null)
-    {
-        return Results.NotFound();
-    }
-
-    return Results.Ok(meeting);
-});
-
-app.MapPost("/api/meetings", async (Meeting meeting, IMeetingRepository repository) =>
-{
-    var createdMeeting = await repository.CreateMeetingAsync(meeting);
-    return Results.Created($"/api/meetings/{createdMeeting.Id}", createdMeeting);
-});
+// register the meeting endpoints
+app.MapMeetingEndpoints();
 
 // register the metadata endpoints
 app.MapMetadataEndpoints();

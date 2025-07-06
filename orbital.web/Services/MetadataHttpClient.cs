@@ -8,9 +8,6 @@ public class MetadataHttpClient : IMetadataService
 {
     private readonly HttpClient _httpClient;
     private readonly Dictionary<string, object> _cache = new();
-
-    public IReadOnlyList<EventStatusDefinition> EventStatuses => throw new NotImplementedException();
-
     public MetadataHttpClient(HttpClient httpClient)
     {
         _httpClient = httpClient;
@@ -39,12 +36,6 @@ public class MetadataHttpClient : IMetadataService
         throw new Exception($"Failed to load {metadataType} metadata");
     }
     
-    public Task<IEnumerable<EventStatusDefinition>> GetEventStatusesAsync() => 
-        GetMetadataItemsAsync<EventStatusDefinition>("eventStatus");
-        
-    // public Task<IEnumerable<AttendanceModeDefinition>> GetAttendanceModesAsync() => 
-    //     GetMetadataItemsAsync<AttendanceModeDefinition>("attendanceMode");
-    
     public void ClearCache(string metadataType = null)
     {
         if (metadataType == null)
@@ -62,11 +53,6 @@ public class MetadataHttpClient : IMetadataService
                 _cache.Remove(key);
             }
         }
-    }
-
-    Task<IEnumerable<EventStatusDefinition>> IMetadataService.GetEventStatusesAsync()
-    {
-        throw new NotImplementedException();
     }
 
     public T? GetMetadataItemByValue<T>(string metadataType, string value) where T : IMetadataItem
