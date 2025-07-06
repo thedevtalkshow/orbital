@@ -13,7 +13,7 @@ public static class MetadataEndpoints
             .WithTags("Metadata");
 
         // Get event statuses
-        group.MapGet("/eventStatuses", async (IMetadataRepository metadataRepository) =>
+        group.MapGet("/eventStatus", async (IMetadataRepository metadataRepository) =>
         {
             var items = await metadataRepository.GetAllMetadataItemsAsync<EventStatusDefinition>("eventStatus");
             return Results.Ok(items);
