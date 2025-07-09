@@ -23,7 +23,7 @@ builder.Services.AddCors(options =>
     });
 });
 
-builder.AddAzureCosmosClient("cosmosdb", configureClientOptions: clientOptions =>
+var cosmosAction = (CosmosClientOptions clientOptions) =>
 {
     clientOptions.SerializerOptions = new CosmosSerializationOptions()
     {
@@ -31,11 +31,13 @@ builder.AddAzureCosmosClient("cosmosdb", configureClientOptions: clientOptions =
         Indented = false,
         PropertyNamingPolicy = CosmosPropertyNamingPolicy.CamelCase
     };
-});
+    
+};
+builder.AddAzureCosmosClient("cosmosdb", configureClientOptions: cosmosAction);
 
 //AppHost - container references included with the api project.
-// builder.AddAzureCosmosContainer(connectionName: "meetingContainer"); //TODO: this does not work. We need keyed service here to support multiple containers.
-builder.AddAzureCosmosContainer(connectionName: "metadataContainer");
+// builder.AddKeyedAzureCosmosContainer("meetingContainer"); 
+builder.AddKeyedAzureCosmosContainer("metadataContainer", configureClientOptions: cosmosAction);
 
 builder.Services.AddScoped<IMeetingRepository, CosmosMeetingRepository>();
 builder.Services.AddScoped<IMetadataRepository, CosmosMetadataRepository>();

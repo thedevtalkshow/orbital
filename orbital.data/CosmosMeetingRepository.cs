@@ -1,6 +1,7 @@
 ﻿using Microsoft.Azure.Cosmos;
 using orbital.core;
 using orbital.core.Data;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace orbital.data
 {
