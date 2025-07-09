@@ -19,12 +19,9 @@ var meetingContainer = database.AddContainer("meetingContainer", "/type", "meeti
 // metadata container
 var metadataContainer = database.AddContainer("metadataContainer", "/type", "metadata");
 
-// TODO: check if metadatacontainer is empty and add seed data.
-// or does this move to the Imetadatarepository as adefault implementation.
-
 var orbital_api = builder.AddProject<orbital_api>("orbital-api")
         .WithReference(cosmosdb)
-        .WithReference(meetingContainer)
+        // .WithReference(meetingContainer)
         .WithReference(metadataContainer);
 
 builder.AddProject<orbital_web>("orbital-web")

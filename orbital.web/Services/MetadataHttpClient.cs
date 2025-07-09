@@ -22,7 +22,7 @@ public class MetadataHttpClient : IMetadataService
             return (IEnumerable<T>)cachedItems;
         }
         
-        string endpoint = metadataType.EndsWith("s") ? metadataType : $"{metadataType}s";
+        string endpoint = metadataType.EndsWith("s") ? metadataType : $"{metadataType}s";  // TODO: don't like this but it works so far.
         var response = await _httpClient.GetAsync($"/api/metadata/{endpoint}");
         
         if (response.IsSuccessStatusCode)
@@ -36,7 +36,7 @@ public class MetadataHttpClient : IMetadataService
         throw new Exception($"Failed to load {metadataType} metadata");
     }
     
-    public void ClearCache(string metadataType = null)
+    public void ClearCache(string? metadataType)
     {
         if (metadataType == null)
         {

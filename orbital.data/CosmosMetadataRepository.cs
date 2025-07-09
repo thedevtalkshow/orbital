@@ -1,6 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.Data.Common;
 using Microsoft.Azure.Cosmos;
+using Microsoft.Extensions.DependencyInjection;
 using orbital.core.Data;
 using orbital.core.Metadata;
 
@@ -9,14 +10,14 @@ namespace orbital.data;
 public class CosmosMetadataRepository : IMetadataRepository
 {
     private readonly Container _metadataContainer;
-    public CosmosMetadataRepository(Container metadataContainer)
+    public CosmosMetadataRepository([FromKeyedServices("metadataContainer")] Container metadataContainer)
     {
         _metadataContainer = metadataContainer;
     }
 
     public async Task<IEnumerable<T>> GetAllMetadataItemsAsync<T>(string metadataType) where T : IMetadataItem
     {
-        var query = new QueryDefinition("SELECT * FROM c WHERE c.type = @type AND c.IsActive = true ORDER BY c.SortOrder")
+        var query = new QueryDefinition("SELECT * FROM c WHERE c.type = @type AND c.isActive = true ORDER BY c.sortOrder")
             .WithParameter("@type", metadataType);
 
         var iterator = _metadataContainer.GetItemQueryIterator<T>(query);
