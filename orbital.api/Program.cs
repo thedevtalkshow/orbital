@@ -1,5 +1,4 @@
 using Microsoft.Azure.Cosmos;
-using orbital.api;
 using orbital.core;
 using orbital.core.Data;
 using orbital.data;
@@ -44,7 +43,7 @@ if (app.Environment.IsDevelopment())
 {
     using var scope = app.Services.CreateScope();
     var repository = scope.ServiceProvider.GetRequiredService<IMeetingRepository>();
-    await DataSeeder.SeedMeetingsAsync(repository);
+    await repository.SeedMeetingsAsync();
 
     app.MapOpenApi();
 }
