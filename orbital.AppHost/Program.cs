@@ -20,11 +20,13 @@ var meetingContainer = database.AddContainer("meetingContainer", "/type", "meeti
 var metadataContainer = database.AddContainer("metadataContainer", "/type", "metadata");
 
 var orbital_api = builder.AddProject<orbital_api>("orbital-api")
+        .WaitFor(meetingContainer)
         .WithReference(cosmosdb)
         // .WithReference(meetingContainer)
         .WithReference(metadataContainer);
 
 builder.AddProject<orbital_web>("orbital-web")
-        .WithReference(orbital_api);
+        .WithReference(orbital_api)
+        .WaitFor(orbital_api);
 
 builder.Build().Run();
