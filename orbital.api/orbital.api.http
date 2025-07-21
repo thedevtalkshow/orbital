@@ -5,8 +5,8 @@ Accept: application/json
 Content-Type: application/json
 
 {
-    "type": "eventStatus",
-    "value": "Scheduled",
+    "Type": "EventStatusType",
+    "Value": "Scheduled",
     "DescriptionName": "Event Status Scheduled",
     "Description": "Evenet Status Scheduled Item",
     "IsActive": true,
@@ -15,3 +15,8 @@ Content-Type: application/json
 
 
 ###
+
+
+GET {{orbital_api_HostAddress}}/api/metadata/eventStatus
+Content-Type: application/json
+Accept: application/json

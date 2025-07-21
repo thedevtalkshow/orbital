@@ -23,9 +23,9 @@ public static class MetadataEndpoints
         .Produces<IEnumerable<EventStatusDefinition>>(StatusCodes.Status200OK);
 
         // Get attendance modes
-        group.MapGet("/attendanceModes", async (IMetadataService metadataService) =>
+        group.MapGet("/attendanceModes", async (IMetadataRepository metadataRepository) =>
         {
-            var items = await metadataService.GetMetadataItemsAsync<AttendanceModeDefinition>("attendanceMode");
+            var items = await metadataRepository.GetAllMetadataItemsAsync<AttendanceModeDefinition>("attendanceMode");
             return Results.Ok(items);
         })
         .WithName("GetAttendanceModes")
@@ -51,13 +51,13 @@ public static class MetadataEndpoints
         {
             // Implementation would depend on your service methods
             // This is a placeholder assuming you have a CreateMetadataItemAsync method
-            if (string.IsNullOrEmpty(item.type) || string.IsNullOrEmpty(item.Value))
+            if (string.IsNullOrEmpty(item.Type) || string.IsNullOrEmpty(item.Value))
             {
                 return Results.BadRequest("Type and Value are required");
             }
 
             var result = await metadataRepository.CreateMetadataItemAsync(item);
-            return Results.Created($"/api/metadata/{item.type}/{result.id}", result);
+            return Results.Created($"/api/metadata/{item.Type}/{result.Id}", result);
         })
         .WithName("CreateMetadataItem")
         .WithOpenApi()
@@ -68,7 +68,7 @@ public static class MetadataEndpoints
         adminGroup.MapPut("/", async (MetadataDefinition item, IMetadataRepository metadataRepository) =>
         {
             // Implementation would depend on your service methods
-            if (string.IsNullOrEmpty(item.id) || string.IsNullOrEmpty(item.type))
+            if (string.IsNullOrEmpty(item.Id) || string.IsNullOrEmpty(item.Type))
             {
                 return Results.BadRequest("Id and Type are required");
             }

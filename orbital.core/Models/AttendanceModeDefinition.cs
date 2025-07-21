@@ -6,6 +6,6 @@ public class AttendanceModeDefinition : MetadataDefinition
 {
     public AttendanceModeDefinition()
     {
-        type = "EventAttendanceModeEnumeration";
+        Type = "EventAttendanceModeEnumeration";
     }
 }
