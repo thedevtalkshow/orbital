@@ -19,15 +19,23 @@ namespace orbital.web.Services
 
         public async Task<List<Meeting>> GetMeetingsAsync()
         {
-            var response = await _httpClient.GetAsync("/api/meetings");
-            if (response.IsSuccessStatusCode)
+            try
             {
-                var meetings = await response.Content.ReadFromJsonAsync<List<Meeting>>();
-                return meetings;
+                var response = await _httpClient.GetAsync("/api/meetings");
+                if (response.IsSuccessStatusCode)
+                {
+                    var meetings = await response.Content.ReadFromJsonAsync<List<Meeting>>();
+                    return meetings;
+                }
+                else
+                {
+                    throw new Exception("Failed to load meetings");
+                }
+
             }
-            else
+            catch(Exception ex)
             {
-                throw new Exception("Failed to load meetings");
+                throw;
             }
         }
 

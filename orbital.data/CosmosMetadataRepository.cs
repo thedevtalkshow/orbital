@@ -37,8 +37,8 @@ public class CosmosMetadataRepository : IMetadataRepository
 
     public async Task<IEnumerable<T>> GetAllMetadataItemsAsync<T>(string metadataType) where T : IMetadataItem
     {
-        var query = new QueryDefinition("SELECT * FROM c WHERE c.type = @type AND c.isActive = true ORDER BY c.sortOrder")
-            .WithParameter("@type", metadataType);
+        var query = new QueryDefinition("SELECT * FROM c WHERE c.type = @Type AND c.isActive = true ORDER BY c.sortOrder")
+            .WithParameter("@Type", metadataType);
 
         var iterator = _metadataContainer.GetItemQueryIterator<T>(query);
 
@@ -54,9 +54,9 @@ public class CosmosMetadataRepository : IMetadataRepository
 
     public async Task<T> GetMetadataItemByValueAsync<T>(string metadataType, string value) where T : IMetadataItem
     {
-        var query = new QueryDefinition("SELECT * FROM c WHERE c.type = @type AND c.value = @value")
-            .WithParameter("@type", metadataType)
-            .WithParameter("@value", value);
+        var query = new QueryDefinition("SELECT * FROM c WHERE c.type = @Type AND c.value = @value")
+            .WithParameter("@Type", metadataType)
+            .WithParameter("@Value", value);
 
         var iterator = _metadataContainer.GetItemQueryIterator<T>(query);
 
@@ -71,9 +71,9 @@ public class CosmosMetadataRepository : IMetadataRepository
 
     public async Task<bool> IsValidMetadataValueAsync(string metadataType, string value)
     {
-        var query = new QueryDefinition("SELECT VALUE COUNT(1) FROM c WHERE c.type = @type AND c.value = @value AND c.IsActive = true")
-            .WithParameter("@type", metadataType)
-            .WithParameter("@value", value);
+        var query = new QueryDefinition("SELECT VALUE COUNT(1) FROM c WHERE c.type = @Type AND c.value = @value AND c.IsActive = true")
+            .WithParameter("@Type", metadataType)
+            .WithParameter("@Value", value);
 
         var iterator = _metadataContainer.GetItemQueryIterator<int>(query);
 
@@ -88,12 +88,12 @@ public class CosmosMetadataRepository : IMetadataRepository
 
     public async Task<T> CreateMetadataItemAsync<T>(T item) where T : IMetadataItem
     {
-        if (string.IsNullOrEmpty(item.id))
+        if (string.IsNullOrEmpty(item.Id))
         {
-            item.id = Guid.NewGuid().ToString();
+            item.Id = Guid.NewGuid().ToString();
         }
 
-        var response = await _metadataContainer.CreateItemAsync(item, new PartitionKey(item.type));
+        var response = await _metadataContainer.CreateItemAsync(item, new PartitionKey(item.Type));
         return response.Resource;
     }
 
@@ -101,7 +101,7 @@ public class CosmosMetadataRepository : IMetadataRepository
     {
         try
         {
-            await _metadataContainer.ReplaceItemAsync<T>(item, item.id, new PartitionKey(item.type));
+            await _metadataContainer.ReplaceItemAsync<T>(item, item.Id, new PartitionKey(item.Type));
             return true;
         }
         catch (CosmosException ex) when (ex.StatusCode == System.Net.HttpStatusCode.NotFound)

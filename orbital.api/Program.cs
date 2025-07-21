@@ -33,7 +33,7 @@ var cosmosAction = (CosmosClientOptions clientOptions) =>
     };
     
 };
-builder.AddAzureCosmosClient("cosmosdb", configureClientOptions: cosmosAction);
+// builder.AddAzureCosmosClient("cosmosdb", configureClientOptions: cosmosAction);
 
 //AppHost - container references included with the api project.
 builder.AddKeyedAzureCosmosContainer("meetingContainer", configureClientOptions: cosmosAction); 
@@ -63,7 +63,7 @@ app.MapDefaultEndpoints();
 app.MapMeetingEndpoints();
 
 // register the metadata endpoints
-// app.MapMetadataEndpoints();
+app.MapMetadataEndpoints();
 
 app.Run();
 

@@ -9,6 +9,6 @@ public class EventStatusDefinition : MetadataDefinition
     
     public EventStatusDefinition()
     {
-        type = "EventStatusType";
+        Type = "EventStatusType";
     }
 }

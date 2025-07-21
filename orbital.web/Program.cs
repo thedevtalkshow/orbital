@@ -18,9 +18,9 @@ builder.Services.AddHttpClient<IMeetingsService, MeetingsHttpClient>(client =>
 });
 
 // Metadata HttpClient
-// builder.Services.AddHttpClient<IMetadataService, MetadataHttpClient>(client =>
-// {
-//     client.BaseAddress = new Uri(MeetingsEndpoint);
-// });
+builder.Services.AddHttpClient<IMetadataService, MetadataHttpClient>(client =>
+{
+    client.BaseAddress = new Uri(MeetingsEndpoint);
+});
 
 await builder.Build().RunAsync();

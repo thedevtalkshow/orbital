@@ -5,8 +5,8 @@ namespace orbital.core.Metadata;
 
 public class MetadataDefinition : IMetadataItem
 {
-    public string id { get; set; } = string.Empty;
-    public string type { get; set; } = string.Empty;
+    public string Id { get; set; } = string.Empty;
+    public string Type { get; set; } = string.Empty;
     public string Value { get; set; } = string.Empty;
     public string DisplayName { get; set; } = string.Empty;
     public string Description { get; set; } = string.Empty;
