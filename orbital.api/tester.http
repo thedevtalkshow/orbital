@@ -1,12 +1,13 @@
 POST https://localhost:7024/api/meetings
 Content-Type: application/json
+
 {
-  "id": "5",
   "type": "meeting",
-  "Title": "Test Meeting",
-  "Description": "This is a test meeting",
-  "StartTime": "2023-10-01T10:00:00Z",
-  "EndTime": "2023-10-01T11:00:00Z"
+  "title": "Test Another Meeting",
+  "description": "This is a test meeting", 
+  "startTime": "7/16/2025 6:15:12 PM",
+  "endTime": "7/16/2025 7:15:12 PM",
+  "eventStatus": "Scheduled"
 }
 
 ###

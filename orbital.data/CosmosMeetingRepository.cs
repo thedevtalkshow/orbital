@@ -10,14 +10,23 @@ namespace orbital.data
         private readonly CosmosClient _client;
         private readonly Container _container;
 
-        public CosmosMeetingRepository(CosmosClient client)
+        // public CosmosMeetingRepository(CosmosClient client)
+        // {
+        //     _client = client;
+        //     _container = _client.GetContainer("orbital", "meetings");
+        // }
+
+        public CosmosMeetingRepository([FromKeyedServices("meetingContainer")] Container meetingContainer)
         {
-            _client = client;
-            _container = _client.GetContainer("orbital", "meetings");
+            _container = meetingContainer;
         }
 
         public async Task<Meeting> CreateMeetingAsync(Meeting meeting)
         {
+            if (string.IsNullOrEmpty(meeting.Id))
+            {
+                meeting.Id = Guid.NewGuid().ToString();
+            }
             Meeting createdMeeting = await _container.CreateItemAsync(meeting, new PartitionKey("meeting"));
             return createdMeeting;
         }

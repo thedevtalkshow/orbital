@@ -12,17 +12,14 @@ var cosmosdb = builder.AddAzureCosmosDB("cosmosdb").RunAsPreviewEmulator(
     });
 
 // need to define reference object for each cosmosdb client and container.
-// meetings container
 var database = cosmosdb.AddCosmosDatabase("orbital", "orbital");
-var meetingContainer = database.AddContainer("meetingContainer", "/type", "meetings");
-
-// metadata container
-var metadataContainer = database.AddContainer("metadataContainer", "/type", "metadata");
+var meetingContainer = database.AddContainer("meetingContainer", "/type", "meetings");   // meetings container
+var metadataContainer = database.AddContainer("metadataContainer", "/type", "metadata"); // metadata container
 
 var orbital_api = builder.AddProject<orbital_api>("orbital-api")
         .WaitFor(meetingContainer)
-        .WithReference(cosmosdb)
-        // .WithReference(meetingContainer)
+        .WaitFor(metadataContainer)
+        .WithReference(meetingContainer)
         .WithReference(metadataContainer);
 
 builder.AddProject<orbital_web>("orbital-web")

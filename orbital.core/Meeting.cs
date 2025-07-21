@@ -6,7 +6,7 @@ public class Meeting
 {
     public string Id { get; set; } = string.Empty;
 
-    public string Type => "meeting";
+    public string Type { get; set; } = "meeting";
 
     [Required(ErrorMessage = "Title is required")]
     [StringLength(100, ErrorMessage = "Title cannot exceed 100 characters")]
