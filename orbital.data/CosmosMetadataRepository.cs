@@ -4,6 +4,7 @@ using Microsoft.Azure.Cosmos;
 using Microsoft.Extensions.DependencyInjection;
 using orbital.core.Data;
 using orbital.core.Metadata;
+using orbital.core.Models;
 
 namespace orbital.data;
 
@@ -13,6 +14,25 @@ public class CosmosMetadataRepository : IMetadataRepository
     public CosmosMetadataRepository([FromKeyedServices("metadataContainer")] Container metadataContainer)
     {
         _metadataContainer = metadataContainer;
+
+        //check if data exists. If not seed the container.
+        var eventStatusResults = GetAllMetadataItemsAsync<EventStatusDefinition>("eventStatus");
+        // if (eventStatusResults.Result.Count() == 0)
+        // {
+        //     foreach (var status in MetadataDataLoader.EventStatuses)
+        //     {
+        //         CreateMetadataItemAsync<EventStatusDefinition>(status);
+        //     }
+        // }
+
+        var attendanceNodeResults = GetAllMetadataItemsAsync<AttendanceModeDefinition>("attendanceMode");
+        // if (attendanceNodeResults.Result.Count() == 0)
+        // {
+        //     foreach (var mode in MetadataDataLoader.EventAttendanceMode)
+        //     {
+        //         CreateMetadataItemAsync<AttendanceModeDefinition>(mode);
+        //     }
+        // }
     }
 
     public async Task<IEnumerable<T>> GetAllMetadataItemsAsync<T>(string metadataType) where T : IMetadataItem

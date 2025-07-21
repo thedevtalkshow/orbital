@@ -55,9 +55,9 @@
                     </div>
                 </div>
 
-                <div class="mb-3">
+                @* <div class="mb-3">
                     <EventStatusComponent @bind-value="newMeeting.EventStatus" @bind-PreviousStartDate="newMeeting.PreviousStartDate" />
-                </div>
+                </div> *@
                 
                 <button type="submit" class="btn btn-success">Save Meeting</button>
             </EditForm>
@@ -98,7 +98,7 @@
     {
         try
         {
-            await LoadMeetings();
+            @* await LoadMeetings(); *@
         }
         catch (Exception)
         {

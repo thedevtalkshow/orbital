@@ -23,14 +23,14 @@ public static class MetadataEndpoints
         .Produces<IEnumerable<EventStatusDefinition>>(StatusCodes.Status200OK);
 
         // Get attendance modes
-        // group.MapGet("/attendanceModes", async (IMetadataService metadataService) =>
-        // {
-        //     var items = await metadataService.GetMetadataItemsAsync<AttendanceModeDefinition>("attendanceMode");
-        //     return Results.Ok(items);
-        // })
-        // .WithName("GetAttendanceModes")
-        // .WithOpenApi()
-        // .Produces<IEnumerable<AttendanceModeDefinition>>(StatusCodes.Status200OK);
+        group.MapGet("/attendanceModes", async (IMetadataService metadataService) =>
+        {
+            var items = await metadataService.GetMetadataItemsAsync<AttendanceModeDefinition>("attendanceMode");
+            return Results.Ok(items);
+        })
+        .WithName("GetAttendanceModes")
+        .WithOpenApi()
+        .Produces<IEnumerable<AttendanceModeDefinition>>(StatusCodes.Status200OK);
 
         // Generic endpoint for any metadata type
         group.MapGet("/{metadataType}", async (string metadataType, IMetadataRepository metadataRepository) =>

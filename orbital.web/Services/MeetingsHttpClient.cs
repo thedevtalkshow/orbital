@@ -33,7 +33,16 @@ namespace orbital.web.Services
 
         public async Task<bool> AddMeetingAsync(Meeting meeting)
         {
-            var response = await _httpClient.PostAsJsonAsync("/api/meetings", meeting);
+            HttpResponseMessage response;
+            try
+            {
+                response = await _httpClient.PostAsJsonAsync("/api/meetings", meeting);
+            }
+            catch (System.Exception ex)
+            {                
+                throw;
+            } 
+
             return response.IsSuccessStatusCode;
         }
     }

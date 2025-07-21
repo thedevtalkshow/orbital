@@ -36,7 +36,7 @@ var cosmosAction = (CosmosClientOptions clientOptions) =>
 builder.AddAzureCosmosClient("cosmosdb", configureClientOptions: cosmosAction);
 
 //AppHost - container references included with the api project.
-// builder.AddKeyedAzureCosmosContainer("meetingContainer"); 
+builder.AddKeyedAzureCosmosContainer("meetingContainer", configureClientOptions: cosmosAction); 
 builder.AddKeyedAzureCosmosContainer("metadataContainer", configureClientOptions: cosmosAction);
 
 builder.Services.AddScoped<IMeetingRepository, CosmosMeetingRepository>();
@@ -44,7 +44,6 @@ builder.Services.AddScoped<IMetadataRepository, CosmosMetadataRepository>();
 
 var app = builder.Build();
 
-app.MapDefaultEndpoints();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -58,12 +57,13 @@ app.UseRouting();
 app.UseCors("LocalhostPolicy");
 
 app.UseHttpsRedirection();
+app.MapDefaultEndpoints();
 
 // register the meeting endpoints
 app.MapMeetingEndpoints();
 
 // register the metadata endpoints
-app.MapMetadataEndpoints();
+// app.MapMetadataEndpoints();
 
 app.Run();
 
