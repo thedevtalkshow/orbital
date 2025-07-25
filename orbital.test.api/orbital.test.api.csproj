@@ -18,6 +18,7 @@
 
 	<ItemGroup>
 		<ProjectReference Include="..\orbital.api\orbital.api.csproj" />
+		<ProjectReference Include="..\orbital.web\orbital.web.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>
