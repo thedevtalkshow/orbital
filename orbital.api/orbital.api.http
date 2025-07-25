@@ -5,12 +5,12 @@ Accept: application/json
 Content-Type: application/json
 
 {
-    "Type": "EventStatusType",
-    "Value": "Scheduled",
-    "DescriptionName": "Event Status Scheduled",
-    "Description": "Evenet Status Scheduled Item",
+    "Type": "EventAttendanceModeEnumeration",
+    "Value": "Online",
+    "DisplayName": "Online",
+    "Description": "Attendance Mode Online",
     "IsActive": true,
-    "SortOrder": 0
+    "SortOrder": 1
 }
 
 

@@ -58,6 +58,10 @@
                 <div class="mb-3">
                     <EventStatusComponent @bind-value="newMeeting.EventStatus" @bind-PreviousStartDate="newMeeting.PreviousStartDate" />
                 </div>
+
+                <div class="mb-3">
+                    <AttendanceModeComponent @bind-value="newMeeting.EventAttendanceMode" />
+                </div>
                 
                 <button type="submit" class="btn btn-success">Save Meeting</button>
             </EditForm>

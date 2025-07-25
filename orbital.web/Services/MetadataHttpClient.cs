@@ -22,8 +22,8 @@ public class MetadataHttpClient : IMetadataService
             return (IEnumerable<T>)cachedItems;
         }
         
-        string endpoint = metadataType.EndsWith("s") ? metadataType : $"{metadataType}s";  // TODO: don't like this but it works so far.
-        var response = await _httpClient.GetAsync($"/api/metadata/{endpoint}");
+        // string endpoint = metadataType.EndsWith("s") ? metadataType : $"{metadataType}s";  // TODO: don't like this but it works so far.
+        var response = await _httpClient.GetAsync($"/api/metadata/{metadataType}");
         
         if (response.IsSuccessStatusCode)
         {
