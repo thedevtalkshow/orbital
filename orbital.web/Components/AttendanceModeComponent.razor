@@ -1,0 +1,50 @@
+@using orbital.core.Models
+@using orbital.core.Metadata
+@using orbital.web.Services
+@inject IMetadataService MetadataService
+
+<div class="mb-3">
+    <label for="EventAttendanceModeEnumeration" class="form-label">Attendance Mode</label>
+    <select id="EventAttendanceModeEnumeration" class="form-control" value="@Value" @onchange="OnStatusChanged">
+        <option value="">--Select Attendance Mode --</option>
+        @if (EventAttendanceModeEnumeration != null)
+        {
+            @foreach (var mode in EventAttendanceModeEnumeration)
+            {
+                <option value="@mode.Value">@mode.DisplayName</option>
+            }
+        }
+    </select>
+</div>
+
+@code {
+    private List<AttendanceModeDefinition>? EventAttendanceModeEnumeration = null;
+
+    [Parameter]
+    public string Value {get; set;} = string.Empty;
+
+    [Parameter]
+    public EventCallback<string> ValueChanged {get; set;}
+    
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            var attendanceModes = await MetadataService.GetMetadataItemsAsync<AttendanceModeDefinition>("EventAttendanceModeEnumeration");
+            EventAttendanceModeEnumeration = attendanceModes.ToList();
+        }
+        catch (Exception ex)
+        {
+            throw;
+        }
+    }
+
+    private async Task OnStatusChanged(ChangeEventArgs e)
+    {
+        var newValue = e.Value?.ToString() ?? string.Empty;
+
+        //updated parent component with new value
+        await ValueChanged.InvokeAsync(newValue);
+    }
+
+}

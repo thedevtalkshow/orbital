@@ -45,7 +45,7 @@
     {
         try
         {
-            var statusList = await MetadataService.GetMetadataItemsAsync<EventStatusDefinition>("eventStatus");
+            var statusList = await MetadataService.GetMetadataItemsAsync<EventStatusDefinition>("EventStatusType");
             eventStatuses = statusList.ToList();
         }
         catch (Exception ex)

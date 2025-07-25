@@ -13,9 +13,9 @@ public static class MetadataEndpoints
             .WithTags("Metadata");
 
         // Get event statuses
-        group.MapGet("/eventStatus", async (IMetadataRepository metadataRepository) =>
+        group.MapGet("/EventStatusType", async (IMetadataRepository metadataRepository) =>
         {
-            var items = await metadataRepository.GetAllMetadataItemsAsync<EventStatusDefinition>("eventStatus");
+            var items = await metadataRepository.GetAllMetadataItemsAsync<EventStatusDefinition>("EventStatusType");
             return Results.Ok(items);
         })
         .WithName("GetEventStatuses")
@@ -23,9 +23,9 @@ public static class MetadataEndpoints
         .Produces<IEnumerable<EventStatusDefinition>>(StatusCodes.Status200OK);
 
         // Get attendance modes
-        group.MapGet("/attendanceModes", async (IMetadataRepository metadataRepository) =>
+        group.MapGet("/EventAttendanceModeEnumeration", async (IMetadataRepository metadataRepository) =>
         {
-            var items = await metadataRepository.GetAllMetadataItemsAsync<AttendanceModeDefinition>("attendanceMode");
+            var items = await metadataRepository.GetAllMetadataItemsAsync<AttendanceModeDefinition>("EventAttendanceModeEnumeration");
             return Results.Ok(items);
         })
         .WithName("GetAttendanceModes")
