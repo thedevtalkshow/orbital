@@ -1,0 +1,150 @@
+@using orbital.core
+@using orbital.web.Services
+@using orbital.web.Components
+
+@inject IMeetingsService meetingsService
+
+<div class="card mt-3 p-3">
+    <h4>@(IsEditing ? "Edit Meeting" : "Add New Meeting")</h4>
+    <EditForm Model="@editMeeting" OnValidSubmit="HandleValidSubmit">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+        
+        @if (editMeeting != null)
+        {
+        <div class="mb-3">
+            <label for="title" class="form-label">Title</label>
+            <InputText id="title" @bind-Value="editMeeting.Title" class="form-control" />
+            <ValidationMessage For="@(() => editMeeting.Title)" />
+        </div>
+        
+        <div class="mb-3">
+            <label for="description" class="form-label">Description</label>
+            <InputTextArea id="description" @bind-Value="editMeeting.Description" class="form-control" rows="3" />
+        </div>
+        
+        <div class="mb-3">
+            <label for="location" class="form-label">Location</label>
+            <InputText id="location" @bind-Value="editMeeting.Location" class="form-control" />
+        </div>
+        
+        <div class="mb-3">
+            <label for="keywords" class="form-label">Keywords (comma-separated)</label>
+            <InputText id="keywords" @bind-Value="keywordsText" class="form-control" placeholder="e.g. important, planning, quarterly" />
+        </div>
+        
+        <div class="row mb-3">
+            <div class="col">
+                <label for="startTime" class="form-label">Start Time</label>
+                <InputDate id="startTime" Type="InputDateType.DateTimeLocal" @bind-Value="editMeeting.StartTime" @bind-Value:after="UpdateEndTime" class="form-control" />
+                <ValidationMessage For="@(() => editMeeting.StartTime)" />
+            </div>
+            <div class="col">
+                <label for="endTime" class="form-label">End Time</label>
+                <InputDate id="endTime" Type="InputDateType.DateTimeLocal" @bind-Value="editMeeting.EndTime" class="form-control" />
+                <ValidationMessage For="@(() => editMeeting.EndTime)" />
+            </div>
+        </div>
+
+        <div class="mb-3">
+            <EventStatusComponent @bind-value="editMeeting.EventStatus" @bind-PreviousStartDate="editMeeting.PreviousStartDate" />
+        </div>
+
+        <div class="mb-3">
+            <AttendanceModeComponent @bind-value="editMeeting.EventAttendanceMode" />
+        </div>
+        
+        <button type="submit" class="btn btn-success me-2">@(IsEditing ? "Update Meeting" : "Save Meeting")</button>
+        <button type="button" class="btn btn-secondary" @onclick="HandleCancel">Cancel</button>
+        }
+    </EditForm>
+    
+    @if (!string.IsNullOrEmpty(formMessage))
+    {
+        <div class="alert @(formSuccess ? "alert-success" : "alert-danger") mt-3">
+            @formMessage
+        </div>
+    }
+</div>
+
+@code
+{
+    [Parameter]
+    public Meeting? editMeeting { get; set; }
+    
+    [Parameter]
+    public EventCallback<Meeting> OnSave { get; set; }
+    
+    [Parameter]
+    public EventCallback OnCancel { get; set; }
+    
+    [Parameter]
+    public bool IsEditing { get; set; }
+    
+    private string formMessage = string.Empty;
+    private bool formSuccess = false;
+    private string keywordsText = string.Empty;
+
+    protected override void OnParametersSet()
+    {
+        if (editMeeting != null && editMeeting.Keywords != null && editMeeting.Keywords.Any())
+        {
+            keywordsText = string.Join(", ", editMeeting.Keywords);
+        }
+    }
+
+    private async Task HandleValidSubmit()
+    {
+        if (editMeeting == null) return;
+
+        try
+        {
+            // Process keywords from comma-separated string to list
+            if (!string.IsNullOrWhiteSpace(keywordsText))
+            {
+                editMeeting.Keywords = keywordsText
+                    .Split(',')
+                    .Select(k => k.Trim())
+                    .Where(k => !string.IsNullOrEmpty(k))
+                    .ToList();
+            }
+
+            bool result;
+            if (IsEditing)
+            {
+                result = await meetingsService.UpdateMeetingAsync(editMeeting);
+                formMessage = result ? "Meeting updated successfully!" : "Failed to update meeting. Please try again.";
+            }
+            else
+            {
+                result = await meetingsService.AddMeetingAsync(editMeeting);
+                formMessage = result ? "Meeting added successfully!" : "Failed to add meeting. Please try again.";
+            }
+
+            formSuccess = result;
+
+            if (result)
+            {
+                await OnSave.InvokeAsync(editMeeting);
+            }
+        }
+        catch (Exception ex)
+        {
+            formSuccess = false;
+            formMessage = $"Error: {ex.Message}";
+        }
+    }
+
+    private async Task HandleCancel()
+    {
+        await OnCancel.InvokeAsync();
+    }
+
+    private void UpdateEndTime()
+    {
+        if (editMeeting != null)
+        {
+            editMeeting.EndTime = editMeeting.StartTime.AddHours(2);
+        }
+    }
+}

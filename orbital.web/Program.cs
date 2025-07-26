@@ -17,6 +17,9 @@ builder.Services.AddHttpClient<IMeetingsService, MeetingsHttpClient>(client =>
     client.BaseAddress = new Uri(MeetingsEndpoint);
 });
 
+// Register the meeting state service
+builder.Services.AddScoped<IMeetingStateService, MeetingStateService>();
+
 // Metadata HttpClient
 builder.Services.AddHttpClient<IMetadataService, MetadataHttpClient>(client =>
 {

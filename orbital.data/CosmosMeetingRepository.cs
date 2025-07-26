@@ -31,6 +31,12 @@ namespace orbital.data
             return createdMeeting;
         }
 
+        public async Task<Meeting> UpdateMeetingAsync(Meeting meeting)
+        {
+            Meeting createdMeeting = await _container.UpsertItemAsync(meeting, new PartitionKey("meeting"));
+            return createdMeeting;
+        }
+
         public async Task<Meeting> GetMeetingByIdAsync(string id)
         {
             try

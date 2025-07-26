@@ -6,5 +6,6 @@ namespace orbital.web.Services
     {
         Task<List<Meeting>> GetMeetingsAsync();
         Task<bool> AddMeetingAsync(Meeting meeting);
+        Task<bool> UpdateMeetingAsync(Meeting meeting);
     }
 }

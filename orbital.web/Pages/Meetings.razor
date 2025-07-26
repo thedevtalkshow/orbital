@@ -2,78 +2,17 @@
 @using orbital.core
 @using orbital.web.Services
 @using orbital.web.Components
-@using Microsoft.AspNetCore.Components.Forms
 
 @inject IMeetingsService meetingsService
+@inject NavigationManager Navigation
+@inject IMeetingStateService meetingStateService
 
 <h3>Meetings</h3>
 
 <div class="add-meeting-section mb-4">
-    <button class="btn btn-primary" @onclick="ToggleAddMeetingForm">
-        @(showAddForm ? "Cancel" : "Add New Meeting")
+    <button class="btn btn-primary" @onclick="NavigateToAddMeeting">
+        Add New Meeting
     </button>
-    
-    @if (showAddForm)
-    {
-        <div class="card mt-3 p-3">
-            <h4>Add New Meeting</h4>
-            <EditForm Model="@newMeeting" OnValidSubmit="HandleValidSubmit">
-                <DataAnnotationsValidator />
-                <ValidationSummary />
-                
-                <div class="mb-3">
-                    <label for="title" class="form-label">Title</label>
-                    <InputText id="title" @bind-Value="newMeeting.Title" class="form-control" />
-                    <ValidationMessage For="@(() => newMeeting.Title)" />
-                </div>
-                
-                <div class="mb-3">
-                    <label for="description" class="form-label">Description</label>
-                    <InputTextArea id="description" @bind-Value="newMeeting.Description" class="form-control" rows="3" />
-                </div>
-                
-                <div class="mb-3">
-                    <label for="location" class="form-label">Location</label>
-                    <InputText id="location" @bind-Value="newMeeting.Location" class="form-control" />
-                </div>
-                
-                <div class="mb-3">
-                    <label for="keywords" class="form-label">Keywords (comma-separated)</label>
-                    <InputText id="keywords" @bind-Value="keywordsText" class="form-control" placeholder="e.g. important, planning, quarterly" />
-                </div>
-                
-                <div class="row mb-3">
-                    <div class="col">
-                        <label for="startTime" class="form-label">Start Time</label>
-                        <InputDate id="startTime" Type="InputDateType.DateTimeLocal" @bind-Value="newMeeting.StartTime" @bind-Value:after="UpdateEndTime" class="form-control" />
-                        <ValidationMessage For="@(() => newMeeting.StartTime)" />
-                    </div>
-                    <div class="col">
-                        <label for="endTime" class="form-label">End Time</label>
-                        <InputDate id="endTime" Type="InputDateType.DateTimeLocal" @bind-Value="newMeeting.EndTime" class="form-control" />
-                        <ValidationMessage For="@(() => newMeeting.EndTime)" />
-                    </div>
-                </div>
-
-                <div class="mb-3">
-                    <EventStatusComponent @bind-value="newMeeting.EventStatus" @bind-PreviousStartDate="newMeeting.PreviousStartDate" />
-                </div>
-
-                <div class="mb-3">
-                    <AttendanceModeComponent @bind-value="newMeeting.EventAttendanceMode" />
-                </div>
-                
-                <button type="submit" class="btn btn-success">Save Meeting</button>
-            </EditForm>
-            
-            @if (!string.IsNullOrEmpty(formMessage))
-            {
-                <div class="alert @(formSuccess ? "alert-success" : "alert-danger") mt-3">
-                    @formMessage
-                </div>
-            }
-        </div>
-    }
 </div>
 
 <div class="meeting-list">
@@ -85,18 +24,13 @@
     {
         foreach (var meeting in meetings)
         {
-            <MeetingComponent Meeting="meeting" />
+            <MeetingComponent Meeting="meeting" OnEditClicked="NavigateToEditMeeting" />
         }
     }
 </div>
 
 @code {
     private List<Meeting> meetings = new List<Meeting>();
-    private Meeting newMeeting = new Meeting();
-    private bool showAddForm = false;
-    private string formMessage = string.Empty;
-    private bool formSuccess = false;
-    private string keywordsText = string.Empty; // For handling comma-separated keywords
 
     protected override async Task OnInitializedAsync()
     {
@@ -116,71 +50,14 @@
         meetings = await meetingsService.GetMeetingsAsync();
     }
 
-    private void ToggleAddMeetingForm()
+    private void NavigateToAddMeeting()
     {
-        showAddForm = !showAddForm;
-        if (showAddForm)
-        {
-            // Reset form when opening
-            newMeeting = new Meeting
-            {
-                StartTime = DateTime.Now,
-                EndTime = DateTime.Now.AddHours(1)
-            };
-            keywordsText = string.Empty;
-            formMessage = string.Empty;
-        }
+        Navigation.NavigateTo("/meetings/edit");
     }
 
-    private async Task HandleValidSubmit()
+    private void NavigateToEditMeeting(Meeting meeting)
     {
-        try
-        {
-            // Process keywords from comma-separated string to list
-            if (!string.IsNullOrWhiteSpace(keywordsText))
-            {
-                newMeeting.Keywords = keywordsText
-                    .Split(',')
-                    .Select(k => k.Trim())
-                    .Where(k => !string.IsNullOrWhiteSpace(k))
-                    .ToList();
-            }
-
-            // Generate a temporary ID (the API will likely assign the real one)
-            newMeeting.Id = Guid.NewGuid().ToString();
-
-            var result = await meetingsService.AddMeetingAsync(newMeeting);
-
-            if (result)
-            {
-                formSuccess = true;
-                formMessage = "Meeting added successfully!";
-
-                // Refresh the meetings list
-                await LoadMeetings();
-
-                // Reset the form
-                newMeeting = new Meeting
-                {
-                    StartTime = DateTime.Now,
-                    EndTime = DateTime.Now.AddHours(1)
-                };
-                keywordsText = string.Empty;
-            }
-            else
-            {
-                formSuccess = false;
-                formMessage = "Failed to add meeting. Please try again.";
-            }
-        }
-        catch (Exception ex)
-        {
-            formSuccess = false;
-            formMessage = $"Error: {ex.Message}";
-        }
-    }
-    private void UpdateEndTime()
-    {
-        newMeeting.EndTime = newMeeting.StartTime.AddHours(2);
+        meetingStateService.CurrentEditingMeeting = meeting;
+        Navigation.NavigateTo("/meetings/edit");
     }
 }

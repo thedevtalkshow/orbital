@@ -25,6 +25,50 @@ Orbital is built as a modern, cloud-native application using .NET technologies:
 - Dynamic form components for metadata selection
 - Responsive web interface
 
+## Meeting Management
+
+Orbital provides a comprehensive meeting management system with intuitive add and edit functionality:
+
+### Adding New Meetings
+
+1. **Navigation**: Click the "Add New Meeting" button on the meetings list page (`/meetings`)
+2. **Dedicated Form**: Navigate to the dedicated meeting edit page (`/meetings/edit`)
+3. **Form Fields**: Fill out meeting details including:
+   - **Title**: Meeting name/title
+   - **Description**: Detailed meeting description
+   - **Location**: Meeting venue or online platform
+   - **Start/End Time**: Date and time scheduling with automatic duration calculation
+   - **Keywords**: Comma-separated tags for categorization
+   - **Event Status**: Choose from scheduled, cancelled, rescheduled, or postponed
+   - **Attendance Mode**: Select online, offline, or mixed attendance options
+4. **Save/Cancel**: Submit the form to save or cancel to return to the meetings list
+
+### Editing Existing Meetings
+
+1. **Edit Access**: Click the "Edit" button on any meeting card in the meetings list
+2. **Authorization Ready**: Edit buttons can be conditionally displayed based on user permissions
+3. **Pre-populated Form**: Meeting data is securely loaded into the edit form
+4. **Update/Cancel**: Modify details and update or cancel changes
+5. **Seamless Navigation**: Return to the meetings list after saving or canceling
+
+### Technical Implementation
+
+- **Dedicated Edit Page**: Clean separation between listing and editing functionality
+- **State Management**: Secure meeting data transfer using `MeetingStateService`
+- **URL Security**: No sensitive meeting IDs exposed in URLs
+- **Component Architecture**: Reusable `MeetingEditorComponent` handles both add and edit modes
+- **Event Callbacks**: Proper navigation flow with save/cancel event handling
+- **Responsive Design**: Form layout adapts to different screen sizes
+- **Validation**: Built-in form validation with error messaging
+
+### User Experience Features
+
+- **Dynamic UI**: Form titles and buttons update based on add vs. edit mode
+- **Auto-populate**: End time automatically calculated when start time is set
+- **Keyword Management**: Intuitive comma-separated keyword input
+- **Error Handling**: Comprehensive error messaging and validation feedback
+- **Clean Navigation**: Consistent back-to-list navigation patterns
+
 ## Technology Stack
 
 - **.NET 9**: Latest .NET framework with Aspire

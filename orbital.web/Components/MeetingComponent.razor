@@ -49,6 +49,12 @@
             {
                 <div class="meeting-id">ID: @Meeting.Id</div>
             }
+            
+            <div class="meeting-actions mt-2">
+                <button class="btn btn-sm btn-outline-primary" @onclick="() => OnEditClicked.InvokeAsync(Meeting)">
+                    Edit
+                </button>
+            </div>
         </div>
     </div>
 </div>
@@ -56,6 +62,9 @@
 @code {
     [Parameter]
     public Meeting? Meeting { get; set; }
+    
+    [Parameter]
+    public EventCallback<Meeting> OnEditClicked { get; set; }
 
     private string GetDuration()
     {

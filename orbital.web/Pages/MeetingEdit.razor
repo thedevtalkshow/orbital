@@ -1,0 +1,61 @@
+@page "/meetings/edit"
+@using orbital.core
+@using orbital.web.Services
+@using orbital.web.Components
+
+@inject IMeetingsService meetingsService
+@inject NavigationManager Navigation
+@inject IMeetingStateService meetingStateService
+
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <h3>@(IsEditing ? "Edit Meeting" : "Add New Meeting")</h3>
+            
+            <MeetingEditorComponent editMeeting="currentMeeting" 
+                                    OnSave="HandleSave" 
+                                    OnCancel="HandleCancel" 
+                                    IsEditing="IsEditing" />
+        </div>
+    </div>
+</div>
+
+@code {
+    
+    private Meeting currentMeeting = new Meeting();
+    private bool IsEditing => !string.IsNullOrEmpty(currentMeeting.Id);
+
+    protected override void OnInitialized()
+    {
+        // Check if we're editing an existing meeting
+        var meetingToEdit = meetingStateService.CurrentEditingMeeting;
+        if (meetingToEdit != null)
+        {
+            currentMeeting = meetingToEdit;
+            
+            // Clear the state after using it
+            meetingStateService.ClearEditingMeeting();
+        }
+        else
+        {
+            // New meeting - set defaults
+            currentMeeting = new Meeting
+            {
+                StartTime = DateTime.Now,
+                EndTime = DateTime.Now.AddHours(1)
+            };
+        }
+    }
+
+    private void HandleSave(Meeting meeting)
+    {
+        // Navigate back to meetings list after successful save
+        Navigation.NavigateTo("/meetings");
+    }
+
+    private void HandleCancel()
+    {
+        // Navigate back to meetings list without saving
+        Navigation.NavigateTo("/meetings");
+    }
+}
