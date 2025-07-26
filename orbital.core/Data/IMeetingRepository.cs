@@ -9,5 +9,7 @@ namespace orbital.core.Data
         Task<Meeting> GetMeetingByIdAsync(string id);
 
         Task<Meeting> CreateMeetingAsync(Meeting meeting);
+
+        Task<Meeting> UpdateMeetingAsync(Meeting meeting);
     }
 }

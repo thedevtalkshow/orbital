@@ -53,5 +53,20 @@ namespace orbital.web.Services
 
             return response.IsSuccessStatusCode;
         }
+
+        public async Task<bool> UpdateMeetingAsync(Meeting meeting)
+        {
+            HttpResponseMessage response;
+            try
+            {
+                response = await _httpClient.PutAsJsonAsync($"/api/meetings/{meeting.Id}", meeting);
+            }
+            catch (System.Exception ex)
+            {
+                throw;
+            }
+
+            return response.IsSuccessStatusCode;
+        }
     }
 }

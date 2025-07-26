@@ -37,5 +37,13 @@ public static class MeetingEndpoint
             var createdMeeting = await repository.CreateMeetingAsync(meeting);
             return Results.Created($"/api/meetings/{createdMeeting.Id}", createdMeeting);
         });
+
+        group.MapPut("/{id}", async (string id, Meeting meeting, IMeetingRepository repository) =>
+        {
+            // Ensure the meeting ID matches the route parameter
+            meeting.Id = id;
+            var updatedMeeting = await repository.UpdateMeetingAsync(meeting);
+            return Results.Ok(updatedMeeting);
+        });
     }
 }
