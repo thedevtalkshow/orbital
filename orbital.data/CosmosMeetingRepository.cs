@@ -33,8 +33,18 @@ namespace orbital.data
 
         public async Task<Meeting> UpdateMeetingAsync(Meeting meeting)
         {
-            Meeting createdMeeting = await _container.UpsertItemAsync(meeting, new PartitionKey("meeting"));
-            return createdMeeting;
+            // check if exists => replace
+            var checkMeeting = await GetMeetingByIdAsync(meeting.Id);
+
+            if (checkMeeting != null)
+            {
+                Meeting createdMeeting = await _container.ReplaceItemAsync(meeting, meeting.Id, new PartitionKey("meeting"));
+
+                return createdMeeting;
+            }
+
+            return null;
+
         }
 
         public async Task<Meeting> GetMeetingByIdAsync(string id)
