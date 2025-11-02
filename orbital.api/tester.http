@@ -19,3 +19,19 @@ Content-Type: application/json
 
 GET https://localhost:7024/api/meetings
 Content-Type: application/json
+
+###
+
+
+PUT https://localhost:7024/api/meetings/73
+Content-Type: application/json
+
+{
+  "id": "73",
+  "type": "meeting",
+  "title": "Test Another Meeting",
+  "description": "This is a test meeting", 
+  "startTime": "2025-07-25T09:33:23.976-04:00",
+  "endTime": "2025-07-25T10:33:23.976-04:00",
+  "eventStatus": "Scheduled"
+}

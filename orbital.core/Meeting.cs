@@ -17,6 +17,7 @@ public class Meeting
 
     [Required(ErrorMessage = "Start time is required")]
     [Display(Name = "Start Time")]
+    [CustomValidation(typeof(Meeting), nameof(ValidateStartTime))]
     public DateTime StartTime { get; set; }
 
     [Required(ErrorMessage = "End time is required")]
@@ -136,6 +137,16 @@ public class Meeting
         if (endTime <= meeting.StartTime)
         {
             return new ValidationResult("End time must be after start time");
+        }
+
+        return ValidationResult.Success!;
+    }
+
+    public static ValidationResult ValidateStartTime(DateTime startTime, ValidationContext context)
+    {
+        if (startTime == default(DateTime))
+        {
+            return new ValidationResult("Start time is required");
         }
 
         return ValidationResult.Success!;

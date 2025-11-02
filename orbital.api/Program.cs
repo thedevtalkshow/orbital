@@ -33,11 +33,12 @@ var cosmosAction = (CosmosClientOptions clientOptions) =>
     };
     
 };
-// builder.AddAzureCosmosClient("cosmosdb", configureClientOptions: cosmosAction);
+
+builder.AddAzureCosmosClient("cosmosdb", configureClientOptions: cosmosAction);
 
 //AppHost - container references included with the api project.
-builder.AddKeyedAzureCosmosContainer("meetingContainer", configureClientOptions: cosmosAction); 
-builder.AddKeyedAzureCosmosContainer("metadataContainer", configureClientOptions: cosmosAction);
+builder.AddKeyedAzureCosmosContainer("meetingContainer"); 
+builder.AddKeyedAzureCosmosContainer("metadataContainer");
 
 builder.Services.AddScoped<IMeetingRepository, CosmosMeetingRepository>();
 builder.Services.AddScoped<IMetadataRepository, CosmosMetadataRepository>();

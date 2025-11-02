@@ -6,17 +6,43 @@ Content-Type: application/json
 
 {
     "Type": "EventAttendanceModeEnumeration",
-    "Value": "Online",
-    "DisplayName": "Online",
-    "Description": "Attendance Mode Online",
+    "Value": "Offline",
+    "DisplayName": "Offline",
+    "Description": "Attendance Mode Offline",
     "IsActive": true,
-    "SortOrder": 1
+    "SortOrder": 0
 }
 
 
 ###
+POST {{orbital_api_HostAddress}}/api/metadata/admin
+Accept: application/json
+Content-Type: application/json
 
+{
+    "Type": "EventStatusType",
+    "Value": "Cancelled",
+    "DisplayName": "Cancelled",
+    "Description": "Event Status Cancelled",
+    "IsActive": true,
+    "SortOrder": 3
+}
 
+###
+POST {{orbital_api_HostAddress}}/api/metadata/admin
+Accept: application/json
+Content-Type: application/json
+
+{
+    "Type": "EventAttendanceModeEnumeration",
+    "Value": "Online",
+    "DisplayName": "Online",
+    "Description": "Attendance Mode Online",
+    "IsActive": true,
+    "SortOrder": 0
+}
+
+###
 GET {{orbital_api_HostAddress}}/api/metadata/eventStatus
 Content-Type: application/json
 Accept: application/json
