@@ -1,4 +1,6 @@
-POST https://localhost:7024/api/meetings
+@orbital_api_HostAddress = https://localhost:7024
+
+POST {{orbital_api_HostAddress}}/api/meetings
 Content-Type: application/json
 
 {

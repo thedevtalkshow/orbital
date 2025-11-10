@@ -1,28 +1,35 @@
 using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace orbital.core;
 
 public class Meeting
 {
+    [JsonPropertyName("id")]
     public string Id { get; set; } = string.Empty;
 
+    [JsonPropertyName("type")]
     public string Type { get; set; } = "meeting";
 
     [Required(ErrorMessage = "Title is required")]
     [StringLength(100, ErrorMessage = "Title cannot exceed 100 characters")]
+    [JsonPropertyName("title")]
     public string Title { get; set; } = string.Empty;
 
     [StringLength(500, ErrorMessage = "Description cannot exceed 500 characters")]
+    [JsonPropertyName("description")]
     public string Description { get; set; } = string.Empty;
 
     [Required(ErrorMessage = "Start time is required")]
     [Display(Name = "Start Time")]
     [CustomValidation(typeof(Meeting), nameof(ValidateStartTime))]
+    [JsonPropertyName("startTime")]
     public DateTime StartTime { get; set; }
 
     [Required(ErrorMessage = "End time is required")]
     [Display(Name = "End Time")]
     [CustomValidation(typeof(Meeting), nameof(ValidateEndTime))]
+    [JsonPropertyName("endTime")]
     public DateTime EndTime { get; set; }
 
     // Schema.org properties
