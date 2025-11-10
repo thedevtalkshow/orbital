@@ -1,16 +1,23 @@
 @orbital_api_HostAddress = https://localhost:7024
 
+### Diagnostic Requests
+GET {{orbital_api_HostAddress}}/diag/cosmos-options
+Accept: application/json
+Content-Type: application/json
+
+###
+
 POST {{orbital_api_HostAddress}}/api/metadata/admin
 Accept: application/json
 Content-Type: application/json
 
 {
-    "Type": "EventAttendanceModeEnumeration",
-    "Value": "Offline",
-    "DisplayName": "Offline",
-    "Description": "Attendance Mode Offline",
-    "IsActive": true,
-    "SortOrder": 0
+    "type": "EventAttendanceModeEnumeration",
+    "value": "Online",
+    "displayName": "Online",
+    "description": "Attendance Mode Online",
+    "isActive": true,
+    "sortOrder": 1
 }
 
 
@@ -21,25 +28,11 @@ Content-Type: application/json
 
 {
     "Type": "EventStatusType",
-    "Value": "Cancelled",
-    "DisplayName": "Cancelled",
-    "Description": "Event Status Cancelled",
+    "Value": "Postponed",
+    "DisplayName": "Postponed",
+    "Description": "Event Status Postponed",
     "IsActive": true,
-    "SortOrder": 3
-}
-
-###
-POST {{orbital_api_HostAddress}}/api/metadata/admin
-Accept: application/json
-Content-Type: application/json
-
-{
-    "Type": "EventAttendanceModeEnumeration",
-    "Value": "Online",
-    "DisplayName": "Online",
-    "Description": "Attendance Mode Online",
-    "IsActive": true,
-    "SortOrder": 0
+    "SortOrder": 1
 }
 
 ###

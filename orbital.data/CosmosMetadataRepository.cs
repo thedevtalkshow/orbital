@@ -52,7 +52,7 @@ public class CosmosMetadataRepository : IMetadataRepository
 
     public async Task<bool> IsValidMetadataValueAsync(string metadataType, string value)
     {
-        var query = new QueryDefinition("SELECT VALUE COUNT(1) FROM c WHERE c.type = @Type AND c.value = @value AND c.IsActive = true")
+        var query = new QueryDefinition("SELECT VALUE COUNT(1) FROM c WHERE c.type = @Type AND c.value = @value AND c.isActive = true")
             .WithParameter("@Type", metadataType)
             .WithParameter("@Value", value);
 
@@ -74,7 +74,17 @@ public class CosmosMetadataRepository : IMetadataRepository
             item.Id = Guid.NewGuid().ToString();
         }
 
-        var response = await _metadataContainer.CreateItemAsync(item, new PartitionKey(item.Type));
+        ItemResponse<T> response;
+        
+        try
+        {
+            response = await _metadataContainer.CreateItemAsync(item, new PartitionKey(item.Type));
+        }
+        catch (System.Exception ex)
+        {
+            throw;
+        }
+
         return response.Resource;
     }
 

@@ -7,18 +7,11 @@ namespace orbital.data
 {
     public class CosmosMeetingRepository : IMeetingRepository
     {
-        private readonly CosmosClient _client;
-        private readonly Container _container;
-
-        // public CosmosMeetingRepository(CosmosClient client)
-        // {
-        //     _client = client;
-        //     _container = _client.GetContainer("orbital", "meetings");
-        // }
+        private readonly Container _meetingContainer;
 
         public CosmosMeetingRepository([FromKeyedServices("meetingContainer")] Container meetingContainer)
         {
-            _container = meetingContainer;
+            _meetingContainer = meetingContainer;
         }
 
         public async Task<Meeting> CreateMeetingAsync(Meeting meeting)
@@ -27,7 +20,7 @@ namespace orbital.data
             {
                 meeting.Id = Guid.NewGuid().ToString();
             }
-            Meeting createdMeeting = await _container.CreateItemAsync(meeting, new PartitionKey("meeting"));
+            Meeting createdMeeting = await _meetingContainer.CreateItemAsync(meeting, new PartitionKey("meeting"));
             return createdMeeting;
         }
 
@@ -38,7 +31,7 @@ namespace orbital.data
 
             if (checkMeeting != null)
             {
-                Meeting createdMeeting = await _container.ReplaceItemAsync(meeting, meeting.Id, new PartitionKey("meeting"));
+                Meeting createdMeeting = await _meetingContainer.ReplaceItemAsync(meeting, meeting.Id, new PartitionKey("meeting"));
 
                 return createdMeeting;
             }
@@ -51,7 +44,7 @@ namespace orbital.data
         {
             try
             {
-                ItemResponse<Meeting> response = await _container.ReadItemAsync<Meeting>(id, new PartitionKey("meeting"));
+                ItemResponse<Meeting> response = await _meetingContainer.ReadItemAsync<Meeting>(id, new PartitionKey("meeting"));
                 return response.Resource;
             }
             catch (CosmosException ex) when (ex.StatusCode == System.Net.HttpStatusCode.NotFound)
@@ -63,7 +56,7 @@ namespace orbital.data
 
         public async Task<IEnumerable<Meeting>> ListMeetingsAsync()
         {
-            var resultIterator = _container.GetItemQueryIterator<Meeting>("SELECT * FROM c WHERE c.type='meeting'");
+            var resultIterator = _meetingContainer.GetItemQueryIterator<Meeting>("SELECT * FROM c WHERE c.type='meeting'");
             var meetings = new List<Meeting>();
 
             while (resultIterator.HasMoreResults)

@@ -34,11 +34,9 @@ var cosmosAction = (CosmosClientOptions clientOptions) =>
     
 };
 
-builder.AddAzureCosmosClient("cosmosdb", configureClientOptions: cosmosAction);
-
-//AppHost - container references included with the api project.
-builder.AddKeyedAzureCosmosContainer("meetingContainer"); 
-builder.AddKeyedAzureCosmosContainer("metadataContainer");
+builder.AddAzureCosmosDatabase("orbital", configureClientOptions: cosmosAction)
+    .AddKeyedContainer("meetingContainer")
+    .AddKeyedContainer("metadataContainer");
 
 builder.Services.AddScoped<IMeetingRepository, CosmosMeetingRepository>();
 builder.Services.AddScoped<IMetadataRepository, CosmosMetadataRepository>();
@@ -65,6 +63,17 @@ app.MapMeetingEndpoints();
 
 // register the metadata endpoints
 app.MapMetadataEndpoints();
+
+app.MapGet("/diag/cosmos-options", (Database dataBase) =>
+{
+    var opts = dataBase.Client.ClientOptions;
+    var naming = opts.SerializerOptions.PropertyNamingPolicy.GetType().Name ?? "null";
+    return Results.Ok(new {
+        AppliedPolicy = naming,
+        IgnoreNull = opts.SerializerOptions.IgnoreNullValues,
+        Indented = opts.SerializerOptions.Indented
+    });
+});
 
 app.Run();
 
