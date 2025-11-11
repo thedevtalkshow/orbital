@@ -8,7 +8,7 @@
             "name": "C#: Aspire AppHost Debug",
             "type": "dotnet",
             "request": "launch",
-            "projectPath": "${workspaceFolder}/orbital.AppHost/orbital.AppHost.csproj"
+            "projectPath": "${workspaceFolder}/src/orbital.AppHost/orbital.AppHost.csproj"
         }
     ]
 }
