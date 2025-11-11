@@ -8,7 +8,7 @@ using orbital.core.Metadata;
 using orbital.core.Models;
 using orbital.web.Services;
 
-namespace orbital.test.api;
+namespace orbital.api.tests;
 
 public class MetadataHttpClientTests : IDisposable
 {
