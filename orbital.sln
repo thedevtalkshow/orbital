@@ -30,6 +30,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{0AB3BF05
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "orbital.core.tests", "tests\orbital.core.tests\orbital.core.tests.csproj", "{CD79B7EB-4F94-4219-AA4A-77FA3C309582}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "orbital.test.shared", "tests\orbital.test.shared\orbital.test.shared.csproj", "{FA74D733-CD57-40B2-B17A-85650CD387CE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -136,12 +138,25 @@ Global
 		{CD79B7EB-4F94-4219-AA4A-77FA3C309582}.Release|x64.Build.0 = Release|Any CPU
 		{CD79B7EB-4F94-4219-AA4A-77FA3C309582}.Release|x86.ActiveCfg = Release|Any CPU
 		{CD79B7EB-4F94-4219-AA4A-77FA3C309582}.Release|x86.Build.0 = Release|Any CPU
+		{FA74D733-CD57-40B2-B17A-85650CD387CE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FA74D733-CD57-40B2-B17A-85650CD387CE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FA74D733-CD57-40B2-B17A-85650CD387CE}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{FA74D733-CD57-40B2-B17A-85650CD387CE}.Debug|x64.Build.0 = Debug|Any CPU
+		{FA74D733-CD57-40B2-B17A-85650CD387CE}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{FA74D733-CD57-40B2-B17A-85650CD387CE}.Debug|x86.Build.0 = Debug|Any CPU
+		{FA74D733-CD57-40B2-B17A-85650CD387CE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FA74D733-CD57-40B2-B17A-85650CD387CE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FA74D733-CD57-40B2-B17A-85650CD387CE}.Release|x64.ActiveCfg = Release|Any CPU
+		{FA74D733-CD57-40B2-B17A-85650CD387CE}.Release|x64.Build.0 = Release|Any CPU
+		{FA74D733-CD57-40B2-B17A-85650CD387CE}.Release|x86.ActiveCfg = Release|Any CPU
+		{FA74D733-CD57-40B2-B17A-85650CD387CE}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{CD79B7EB-4F94-4219-AA4A-77FA3C309582} = {0AB3BF05-4346-4AA6-1389-037BE0695223}
+		{FA74D733-CD57-40B2-B17A-85650CD387CE} = {0AB3BF05-4346-4AA6-1389-037BE0695223}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {3DB27583-CE94-43F0-B84A-62B36DFE2291}
