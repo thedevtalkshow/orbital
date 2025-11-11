@@ -26,23 +26,26 @@ builder.Services.AddCors(options =>
     });
 });
 
-// Configure Cosmos Database and Containers
-var databaseClientConfiguration = (CosmosClientOptions clientOptions) =>
+// Configure Cosmos Database and Containers only if not in Testing environment
+if (!builder.Environment.IsEnvironment("Testing"))
 {
-    clientOptions.SerializerOptions = new CosmosSerializationOptions()
+    var databaseClientConfiguration = (CosmosClientOptions clientOptions) =>
     {
-        IgnoreNullValues = true,
-        Indented = false,
-        PropertyNamingPolicy = CosmosPropertyNamingPolicy.CamelCase
-    };    
-};
+        clientOptions.SerializerOptions = new CosmosSerializationOptions()
+        {
+            IgnoreNullValues = true,
+            Indented = false,
+            PropertyNamingPolicy = CosmosPropertyNamingPolicy.CamelCase
+        };    
+    };
 
-builder.AddAzureCosmosDatabase("orbital", configureClientOptions: databaseClientConfiguration)
-    .AddKeyedContainer("meetingContainer")
-    .AddKeyedContainer("metadataContainer");
+    builder.AddAzureCosmosDatabase("orbital", configureClientOptions: databaseClientConfiguration)
+        .AddKeyedContainer("meetingContainer")
+        .AddKeyedContainer("metadataContainer");
 
-builder.Services.AddScoped<IMeetingRepository, CosmosMeetingRepository>();
-builder.Services.AddScoped<IMetadataRepository, CosmosMetadataRepository>();
+    builder.Services.AddScoped<IMeetingRepository, CosmosMeetingRepository>();
+    builder.Services.AddScoped<IMetadataRepository, CosmosMetadataRepository>();
+}
 
 var app = builder.Build();
 
@@ -67,16 +70,20 @@ app.MapMeetingEndpoints();
 // register the metadata endpoints
 app.MapMetadataEndpoints();
 
-app.MapGet("/diag/cosmos-options", (Database dataBase) =>
+// Diagnostic endpoint - only available when Cosmos DB is configured
+if (!app.Environment.IsEnvironment("Testing"))
 {
-    var opts = dataBase.Client.ClientOptions;
-    var naming = opts.SerializerOptions.PropertyNamingPolicy.GetType().Name ?? "null";
-    return Results.Ok(new {
-        AppliedPolicy = naming,
-        IgnoreNull = opts.SerializerOptions.IgnoreNullValues,
-        Indented = opts.SerializerOptions.Indented
+    app.MapGet("/diag/cosmos-options", (Database dataBase) =>
+    {
+        var opts = dataBase.Client.ClientOptions;
+        var naming = opts.SerializerOptions.PropertyNamingPolicy.GetType().Name ?? "null";
+        return Results.Ok(new {
+            AppliedPolicy = naming,
+            IgnoreNull = opts.SerializerOptions.IgnoreNullValues,
+            Indented = opts.SerializerOptions.Indented
+        });
     });
-});
+}
 
 app.Run();
 
