@@ -133,12 +133,108 @@ The application will start with a local CosmosDB emulator pre-configured for dev
 
 ## Testing
 
-The project includes comprehensive testing coverage:
+Orbital follows strict **Test-Driven Development (TDD)** practices to ensure high-quality, maintainable code.
 
-- **Unit Tests**: Complete test coverage for metadata HTTP client functionality
-- **Integration Tests**: API resource integration testing with in-memory repositories
-- **Mock Testing**: Proper mocking of HTTP message handlers for reliable testing
-- **Test Fixtures**: Reusable test data and setup for consistent testing scenarios
+### Test-Driven Development (TDD)
+
+We use the **Red-Green-Refactor** cycle for all feature development:
+
+1. 🔴 **RED**: Write a failing test that describes the desired behavior
+2. 🟢 **GREEN**: Write minimal code to make the test pass
+3. 🔵 **REFACTOR**: Improve the code while keeping tests green
+
+### Test Projects
+
+The project has a dedicated `tests/` directory optimized for TDD workflow:
+
+```
+tests/
+├── orbital.core.tests/      # Fast unit tests for domain logic (< 1 second)
+├── orbital.api.tests/       # Fast unit tests for API endpoints  
+└── orbital.test.shared/     # Shared test utilities and builders
+```
+
+### Test Coverage
+
+- ✅ **69+ unit tests** for domain models with 100% coverage
+- ✅ **Comprehensive API endpoint tests** with mocked dependencies
+- ✅ **Fast execution**: All tests complete in under 1 second
+- ✅ **TDD-optimized**: Designed for rapid feedback loops
+
+### Running Tests
+
+```bash
+# Run all TDD-optimized tests
+dotnet test tests/
+
+# Run specific test project
+dotnet test tests/orbital.core.tests
+dotnet test tests/orbital.api.tests
+
+# Run with detailed output
+dotnet test tests/ --verbosity normal
+
+# Watch mode for continuous testing
+dotnet watch test --project tests/orbital.core.tests
+```
+
+### TDD Coach Agent
+
+We provide a **TDD Coach** GitHub Copilot agent to guide development:
+
+- Enforces test-first approach
+- Guides through Red-Green-Refactor cycle
+- Suggests test scenarios and edge cases
+- Verifies tests fail before implementation
+- Project-specific TDD mentoring
+
+**Access TDD Coach:**
+```
+@workspace In TDD Coach mode, help me implement [feature]
+```
+
+### Test Patterns
+
+All tests follow consistent patterns:
+
+- **Naming**: `MethodUnderTest_Scenario_ExpectedResult`
+- **Structure**: Arrange-Act-Assert (AAA) pattern
+- **Builders**: Fluent test data builders for consistency
+- **Mocking**: Moq framework for dependency isolation
+- **Assertions**: FluentAssertions for readable tests
+
+### Example Test
+
+```csharp
+[Fact]
+public async Task GetMeetingById_WhenMeetingExists_ReturnsOkWithMeeting()
+{
+    // Arrange
+    var meetingId = "test-123";
+    var meeting = TestDataBuilders.CreateMeeting()
+        .WithId(meetingId)
+        .Build();
+    _mockRepository.Setup(r => r.GetMeetingByIdAsync(meetingId))
+        .ReturnsAsync(meeting);
+
+    // Act
+    var result = await endpoint.GetMeetingById(meetingId);
+
+    // Assert
+    result.Should().BeOfType<Ok<Meeting>>();
+    result.StatusCode.Should().Be(200);
+    _mockRepository.Verify(r => r.GetMeetingByIdAsync(meetingId), Times.Once);
+}
+```
+
+### Testing Documentation
+
+For comprehensive testing guidelines, see:
+
+- **[TDD Guidelines](docs/TDD-Guidelines.md)** - Complete TDD practices and principles
+- **[Testing Architecture](docs/Testing-Architecture.md)** - Test project structure and organization  
+- **[TDD Coach Usage](docs/TDD-Coach-Usage.md)** - How to use the TDD Coach agent
+- **[Test Project README](tests/README.md)** - Quick reference for running tests
 
 ## Contributing
 
