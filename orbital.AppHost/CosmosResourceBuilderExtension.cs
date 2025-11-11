@@ -7,7 +7,7 @@ namespace Aspire.Hosting;
 internal static class OrbitalApiResourceCommandBuilder
 {
     public static IResourceBuilder<ProjectResource> WithSeedDataCommand(
-        this IResourceBuilder<ProjectResource> builder)
+        this IResourceBuilder<ProjectResource> builder, HttpClient httpClient)
     {
         var commandOptions = new CommandOptions
         {
@@ -19,7 +19,7 @@ internal static class OrbitalApiResourceCommandBuilder
         builder.WithCommand(
             name: "seed-data",
             displayName: "Seed Data",
-            executeCommand: context => OnRunSeedDataCommand(builder, context),
+            executeCommand: context => OnRunSeedDataCommand(builder, httpClient, context),
             commandOptions: commandOptions);
             
         return builder;
@@ -32,10 +32,10 @@ internal static class OrbitalApiResourceCommandBuilder
             ResourceCommandState.Disabled;
     }
 
-    public static async Task<ExecuteCommandResult> OnRunSeedDataCommand(IResourceBuilder<ProjectResource> builder, ExecuteCommandContext context)
+    public static async Task<ExecuteCommandResult> OnRunSeedDataCommand(IResourceBuilder<ProjectResource> builder, HttpClient httpClient, ExecuteCommandContext context)
     {
         //seed the cosmos db with initial data using the same capabilities as in the orbital_api project.
-        HttpClient httpClient = new HttpClient();
+        
         // httpClient.BaseAddress = 
 
         Console.WriteLine("Seeding data into Cosmos DB...");
