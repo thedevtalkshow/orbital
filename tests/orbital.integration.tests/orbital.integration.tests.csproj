@@ -18,8 +18,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\orbital.api\orbital.api.csproj" />
-    <ProjectReference Include="..\..\orbital.core\orbital.core.csproj" />
+    <ProjectReference Include="..\..\src\orbital.api\orbital.api.csproj" />
+    <ProjectReference Include="..\..\src\orbital.core\orbital.core.csproj" />
     <ProjectReference Include="..\orbital.test.shared\orbital.test.shared.csproj" />
   </ItemGroup>
 
