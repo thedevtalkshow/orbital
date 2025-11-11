@@ -12,6 +12,9 @@ builder.AddServiceDefaults();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
 
+// add reference to orbital-api endpoint via discovery service
+builder.Services.AddHttpClient("orbital-api");
+
 // Add CORS policy scoped to localhost:7024
 builder.Services.AddCors(options =>
 {
@@ -23,18 +26,18 @@ builder.Services.AddCors(options =>
     });
 });
 
-var cosmosAction = (CosmosClientOptions clientOptions) =>
+// Configure Cosmos Database and Containers
+var databaseClientConfiguration = (CosmosClientOptions clientOptions) =>
 {
     clientOptions.SerializerOptions = new CosmosSerializationOptions()
     {
         IgnoreNullValues = true,
         Indented = false,
         PropertyNamingPolicy = CosmosPropertyNamingPolicy.CamelCase
-    };
-    
+    };    
 };
 
-builder.AddAzureCosmosDatabase("orbital", configureClientOptions: cosmosAction)
+builder.AddAzureCosmosDatabase("orbital", configureClientOptions: databaseClientConfiguration)
     .AddKeyedContainer("meetingContainer")
     .AddKeyedContainer("metadataContainer");
 
