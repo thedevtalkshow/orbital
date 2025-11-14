@@ -3,12 +3,13 @@
     // Hover to view descriptions of existing attributes.
     // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
     "version": "0.2.0",
-    "configurations": [        
+    "configurations": [
         {
-            "name": "C#: Aspire AppHost Debug",
+            "name": "Orbital AppHost Debug",
             "type": "dotnet",
             "request": "launch",
             "projectPath": "${workspaceFolder}/src/orbital.AppHost/orbital.AppHost.csproj"
         }
+
     ]
 }
