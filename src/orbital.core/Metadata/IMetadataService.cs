@@ -8,4 +8,5 @@ public interface IMetadataService
     Task<IEnumerable<T>> GetMetadataItemsAsync<T>(string metadataType) where T : IMetadataItem;
     T? GetMetadataItemByValue<T>(string metadataType, string value) where T : IMetadataItem;
     bool IsValidMetadataValue(string metadataType, string value);
+    Task<T> UpdateMetadataAsync<T>(T metadataItem) where T : IMetadataItem;
 }
